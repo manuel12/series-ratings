@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{% block title %}Media Ratings{% endblock title %}</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+
+    {% load static %}
+    <!-- <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}"/> -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+
+    <script
+      type="text/javascript"
+      src="{% static 'js/bootstrap.min.js' %}"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{% static 'js/charts.min.js' %}"
+    ></script>
+    <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+
+    <style>
+      .header {
+        margin: 150px auto 100px auto;
+      }
+      a {
+        text-decoration: none;
+      }
+      h1::before {
+        content: "\f008";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        color: yellow;
+        padding-right: 5px;
+        font-size: 50px;
+      }
+      h1 {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+
+  <body class="bg-dark">
+    <div class="container">
+      <div class="header" data-test="header">
+        <a href="{% url 'media_ratings:home' %}">
+          <h1 class="text-light text-center">Media Ratings</h1>
+        </a>
+      </div>
+      {% block content %} {% endblock content %}
+    </div>
+  </body>
+</html>

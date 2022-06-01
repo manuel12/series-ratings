@@ -1,0 +1,61 @@
+{% extends 'base.html' %} {% block title %}Media Ratings{% endblock title %}
+{%block content %}
+<style>
+  .canvasContainer {
+    height: auto;
+    border-style: solid;
+    border-color: grey;
+    border-width: 5px;
+    border-radius: 20px;
+    background-color: white;
+  }
+</style>
+
+<div class="row justify-content-center">
+  <div class="canvasContainer col-md-9" data-test="canvas-container">
+    <canvas id="ratings-line-chart" data-test="chart"></canvas>
+  </div>
+</div>
+
+<script>
+  const mockData = {
+    title: "Stranger Things",
+    episodes: [
+      {
+        episodeNumber: "1",
+        imDbRating: "8.6",
+      },
+      {
+        episodeNumber: "2",
+        imDbRating: "8.5",
+      },
+      {
+        episodeNumber: "3",
+        imDbRating: "8.9",
+      },
+      {
+        episodeNumber: "4",
+        imDbRating: "9.0",
+      },
+      {
+        episodeNumber: "5",
+        imDbRating: "8.8",
+      },
+      {
+        episodeNumber: "6",
+        imDbRating: "8.9",
+      },
+      {
+        episodeNumber: "7",
+        imDbRating: "9.1",
+      },
+      {
+        episodeNumber: "8",
+        imDbRating: "9.4",
+      },
+    ],
+  };
+  createLineChart(mockData, "ratings-line-chart");
+</script>
+
+{% endblock content %}
