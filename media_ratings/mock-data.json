@@ -1,0 +1,73 @@
+{"ratingAgencies": [{
+    "mediaTitle": "Stranger Things",
+    "ratings": {
+        "metacritic": {
+            "ratingAgencyTitle": "Metacritic",
+            "scores": [
+                {
+                    "scoreTitle": "metascore",
+                    "scoreValue": "74"
+                },
+                {
+                    "scoreTitle": "user-score",
+                    "scoreValue": "85"
+                }]
+        },
+        "imdb": {
+            "ratingAgencyTitle": "IMDb",
+            "scores": [
+                {
+                    "scoreTitle": "",
+                    "scoreValue": "8.7/10"
+                }]
+        },
+        "rottentomatoes": {
+            "ratingAgencyTitle": "Rottentomatoes",
+            "scores": [
+                {
+                    "scoreTitle": "tomatometer",
+                    "scoreValue": "93%"
+                },
+                {
+                    "scoreTitle": "audience-score",
+                    "scoreValue": "91%"
+                }]
+        }
+    }
+},{
+    "mediaTitle": "Evil Dead II",
+    "ratings": {
+        "metacritic": {
+            "ratingAgencyTitle": "Metacritic",
+            "scores": [
+                {
+                    "scoreTitle": "metascore",
+                    "scoreValue": "72"
+                },
+                {
+                    "scoreTitle": "user-score",
+                    "scoreValue": "8.3"
+                }]
+        },
+        "imdb": {
+            "ratingAgencyTitle": "IMDb",
+            "scores": [
+                {
+                    "scoreTitle": "",
+                    "scoreValue": "7.7/10"
+                }]
+        },
+        "rottentomatoes": {
+            "ratingAgencyTitle": "Rottentomatoes",
+            "scores": [
+                {
+                    "scoreTitle": "tomatometer",
+                    "scoreValue": "95%"
+                },
+                {
+                    "scoreTitle": "audience-score",
+                    "scoreValue": "89%"
+                }]
+        }
+    }
+}]}
