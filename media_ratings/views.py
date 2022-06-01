@@ -30,16 +30,3 @@ def scoreboard_data(request):
     else:
         mock_data = mock_data["ratingAgencies"][1]
     return JsonResponse(mock_data)
-
-
-
-# def search_result(request):
-#     template = "results.html"
-#     search_term = request.POST.get('search')
-
-#     context = {}
-#     return render(request, template, context)
-
-# api_key = "k_oj5mw37f"
-# series_id = "tt4574334" # Stranger Things.
-# request_url = f"https://imdb-api.com/en/API/SeasonEpisodes/{api_key}/{series_id}/1"
