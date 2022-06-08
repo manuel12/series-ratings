@@ -88,12 +88,25 @@
   #imdb-score {
     font-size: 1.5rem;
   }
+
+  i {
+    animation: spin infinite 1s linear;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 </style>
 
 <div class="row justify-content-center">
   <div class="scoreboard-container col-md-9" data-test="canvas-container">
     <div class="scoreboard-header">
-      <h2 id="media-title" data-test="media-title"></h2>
+      <h2 id="media-title" data-test="media-title">{{ media_title }}</h2>
     </div>
     <div class="scoreboard-content d-flex justify-content-evenly">
       <div class="score-block" id="metacritic-block">
@@ -117,7 +130,9 @@
               class="score-block-unit-score"
               id="metascore-value"
               data-test="metascore-value"
-            ></div>
+            >
+              <i class="fas fa-spinner"></i>
+            </div>
           </div>
           <div class="score-block-unit">
             <div
@@ -131,7 +146,9 @@
               class="score-block-unit-score"
               id="user-score-value"
               data-test="user-score-value"
-            ></div>
+            >
+              <i class="fas fa-spinner"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -150,7 +167,9 @@
               class="score-block-unit-score"
               id="imdb-score"
               data-test="imdb-score-value"
-            ></div>
+            >
+              <i class="fas fa-spinner"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -175,7 +194,9 @@
               class="score-block-unit-score"
               id="tomatometer-value"
               data-test="tomatometer-value"
-            ></div>
+            >
+              <i class="fas fa-spinner"></i>
+            </div>
           </div>
           <div class="score-block-unit">
             <div
@@ -189,7 +210,9 @@
               class="score-block-unit-score"
               id="audience-score-value"
               data-test="audience-score-value"
-            ></div>
+            >
+              <i class="fas fa-spinner"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -199,7 +222,7 @@
 
 <script>
   const fetchedData = fetch(
-    "http://localhost:8000/scoreboard-data/?media={{ search_term }}",
+    "http://localhost:8000/fetch-score-data/?media={{ search_term }}",
     {
       method: "GET",
     }
@@ -208,7 +231,6 @@
       return fetchedData.json();
     })
     .then((agenciesData) => {
-      addMediaTitle(agenciesData);
       addRatingAgencyValues(agenciesData);
     })
     .catch((error) => {
@@ -216,10 +238,6 @@
     });
 
   const agencies = ["metacritic", "imdb", "rottentomatoes"];
-  const addMediaTitle = (agenciesData) => {
-    const mediaTitle = document.getElementById("media-title");
-    mediaTitle.innerHTML = agenciesData.mediaTitle;
-  };
 
   const addRatingAgencyValues = (agenciesData) => {
     for (const agency of agencies) {
