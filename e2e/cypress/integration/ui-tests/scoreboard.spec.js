@@ -166,3 +166,17 @@ for (const media in medias) {
     });
   });
 }
+
+describe("Scoreboard - Loading icons test", () => {
+  before(() => {
+    cy.visit("/scoreboard");
+  })
+  
+  it("should show loading icons before data is fetcehd", () => {
+    cy.get("#metascore-value > .fa-spinner").should("be.visible");
+    cy.get("#user-score-value > .fa-spinner").should("be.visible");
+    cy.get("#imdb-score > .fa-spinner").should("be.visible");
+    cy.get("#tomatometer-value > .fa-spinner").should("be.visible");
+    cy.get("#audience-score-value > .fa-spinner").should("be.visible");
+  });
+});
