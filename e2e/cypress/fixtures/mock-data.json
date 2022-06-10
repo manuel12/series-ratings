@@ -32,7 +32,7 @@
             "scoreValue": "93%"
           },
           {
-            "scoreTitle": "audience-score",
+            "scoreTitle": "audience_score",
             "scoreValue": "91%"
           }
         ]
@@ -72,7 +72,7 @@
             "scoreValue": "95%"
           },
           {
-            "scoreTitle": "audience-score",
+            "scoreTitle": "audience_score",
             "scoreValue": "89%"
           }
         ]
@@ -112,7 +112,7 @@
             "scoreValue": "98%"
           },
           {
-            "scoreTitle": "audience-score",
+            "scoreTitle": "audience_score",
             "scoreValue": "94%"
           }
         ]
@@ -152,7 +152,7 @@
             "scoreValue": "92%"
           },
           {
-            "scoreTitle": "audience-score",
+            "scoreTitle": "audience_score",
             "scoreValue": "90%"
           }
         ]
@@ -192,7 +192,7 @@
             "scoreValue": "87%"
           },
           {
-            "scoreTitle": "audience-score",
+            "scoreTitle": "audience_score",
             "scoreValue": "79%"
           }
         ]
