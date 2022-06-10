@@ -21,7 +21,10 @@ class Media(models.Model):
             return {
                 "imdb_score":   "N/A"
             }
-    
+
+    class Meta:
+        verbose_name_plural = "Medias"
+
     def rottentomatoes_scores(self):
         rt_score_instance = RottentomatoesScores.objects.filter(media=self).first()
         
@@ -40,13 +43,15 @@ class Media(models.Model):
         
     def __str__(self):
         return self.title
-        
+
 
 class TV_Series(Media):
     num_seasons = models.IntegerField(blank=True, default=1)
     num_eps_per_season = models.IntegerField(blank=True, default=1)
     num_eps = models.IntegerField(blank=True, default=1)
-    
+
+    class Meta:
+        verbose_name_plural = "TV Series"
     
 class MediaScore(models.Model):
     """Base class for representing a media scores.
@@ -56,13 +61,19 @@ class MediaScore(models.Model):
     
     def __str__(self):
         return f"{Media} scores"
-    
+
+    class Meta:
+        verbose_name_plural = "Media Scores"
     
 class IMDbScores(MediaScore):
     imdb_score = models.FloatField(blank=True)
-    
-    
+
+    class Meta:
+        verbose_name_plural = "IMDb Scores"
+
 class RottentomatoesScores(MediaScore):
     tomatometer_score = models.IntegerField(blank=True)
     audience_score = models.IntegerField(blank=True)
 
+    class Meta:
+        verbose_name_plural = "Rottentomatoes Scores"
