@@ -34,11 +34,9 @@ def scoreboard(request):
 
 
 def fetch_score_data(request):
-    base_data = load_json_data("media_ratings/data/skeleton-data.json")
-
-    imdb_score_value = base_data["ratings"]["imdb"]["scores"][0]
-    rt_tomatometer_value = base_data["ratings"]["rottentomatoes"]["scores"][0]
-    rt_audience_score_value = base_data["ratings"]["rottentomatoes"]["scores"][1]
+    imdb_score_value = 0
+    rt_tomatometer_value = 0
+    rt_audience_score_value = 0
 
     search_term = request.GET.get("media")
     search_term = standardize_phrase(search_term)
@@ -52,41 +50,67 @@ def fetch_score_data(request):
         imdb_score = tv_series.imdb_scores()["imdb_score"]
         rt_tomatometer = tv_series.rottentomatoes_scores()["tomatometer"]
         rt_audience_score = tv_series.rottentomatoes_scores()["audience_score"]
- 
+
         if "N/A" in (imdb_score, rt_tomatometer, rt_audience_score):
             print("N/A found on one or more records. Fetching data from the web...")
             # Call function to ONLY fetch score data for the current 'tv_series'.
             # Might need to pass the tv_series title on to the search parsers in order
             # to get the score page urls.
         else:
-            imdb_score_value["scoreValue"] = imdb_score
-            rt_tomatometer_value["scoreValue"] = rt_tomatometer
-            rt_audience_score_value["scoreValue"] = rt_audience_score
-            
-        return JsonResponse(base_data)
+            scores_data = {
+                "imdb": imdb_score,
+                "rt": {
+                    "tomatometer": rt_tomatometer,
+                    "audience-score": rt_audience_score
+                }
+            }
+
+        return JsonResponse(scores_data)
 
     else:
         print("Series not found!")
         print("Fetching data from the web...")
-        try:
-            print(f"-----------------------------------------{search_term}----------------------------------------------------")
-            search_parse_and_save_score_data(search_term, imdb_score_value, rt_tomatometer_value, rt_audience_score_value)
-                 
-            
-        except Exception as e:
-            print(f"---- Error found: {e} - {e.__class__}")
-            print(e)
-            print_statements(
-                imdb_score_value["scoreValue"], 
-                rt_tomatometer_value["scoreValue"], 
-                rt_audience_score_value["scoreValue"])
-    return JsonResponse(base_data)
+        # try:
+        print(
+            f"-----------------------------------------{search_term}----------------------------------------------------")
+        imdb_score, rt_tomatometer, rt_audience_score = search_parse_and_save_score_data(
+            search_term, imdb_score_value, rt_tomatometer_value, rt_audience_score_value)
+
+        scores_data = {
+            "imdb": imdb_score,
+            "rt": {
+                "tomatometer": rt_tomatometer,
+                "audience-score": rt_audience_score
+            }
+        }
+        return JsonResponse(scores_data)
 
 
-def print_statements(st1, st2, st3):
-    print(f'---- imdb score: {st1}')
-    print(f'---- rottentomatoes tomatometer: {st2}')
-    print(f'---- rottentomatoes audience: {st3}')
+def search_parse_and_save_score_data(search_term, imdb_score_value, rt_tomatometer_value, rt_audience_score_value):
+    urls = get_search_result_urls(search_term)
+    imdb_parser = IMDbMediaPageParser(urls["imdb"])
+    rt_parser = RottentomatoesMediaPageParser(urls["rottentomatoes"])
+
+    imdb_score_value, rt_tomatometer_value, rt_audience_score_value = fetch_scores(imdb_parser, rt_parser, imdb_score_value,
+                                                                                   rt_tomatometer_value, rt_audience_score_value)
+
+    print_statements(
+        imdb_score_value,
+        rt_tomatometer_value,
+        rt_audience_score_value)
+    print("Saving values in the database...")
+
+    new_series = create_new_series(search_term)
+    create_new_imdb_score(new_series, imdb_score_value)
+    create_new_rt_score(
+        new_series, rt_tomatometer_value, rt_audience_score_value)
+    
+    imdb_score = new_series.imdb_scores()["imdb_score"]
+    rt_tomatometer = new_series.imdb_scores()["imdb_score"]
+    rt_audience_score = new_series.imdb_scores()["imdb_score"]
+    
+    return [imdb_score, rt_tomatometer, rt_audience_score]
+
 
 def get_search_result_urls(search_term):
     imdb_search_parser = IMDBSearchResultsParser(search_term)
@@ -95,69 +119,55 @@ def get_search_result_urls(search_term):
         "imdb": imdb_search_parser.get_search_result_url(),
         "rottentomatoes": rtSearchParser.get_search_result_url()
     }
-    
-def fetch_score_data(imdb_page_parser, rt_page_parser, imdb_score_value, rt_tomatometer_value, rt_audience_score_value):
-    imdb_score_value["scoreValue"] = imdb_page_parser.get_score_value()
+
+
+def fetch_scores(imdb_page_parser, rt_page_parser, imdb_score_value, rt_tomatometer_value, rt_audience_score_value):
+    imdb_score_value = imdb_page_parser.get_score_value()
     print("Fetched imdb score data...")
 
-    rt_tomatometer_value["scoreValue"] = rt_page_parser.get_tomatometer_value()
+    rt_tomatometer_value = rt_page_parser.get_tomatometer_value()
     print("Fetched rt tomatometer data...")
 
-    rt_audience_score_value["scoreValue"] = rt_page_parser.get_audience_score_value()
+    rt_audience_score_value = rt_page_parser.get_audience_score_value(
+    )
     print("Fetched rt audience_score data...")
-    
-def search_parse_and_save_score_data(search_term, imdb_score_value, rt_tomatometer_value, rt_audience_score_value): 
-    # imdb_search_parser = IMDBSearchResultsParser(search_term)
-    # rtSearchParser = RottentomatoesSearchResultsParser(search_term)
-    
-    urls = get_search_result_urls(search_term)
+    return [imdb_score_value, rt_tomatometer_value, rt_audience_score_value]
 
-    # imdb_page_parser = IMDbMediaPageParser(imdb_search_parser.get_search_result_url())
-    # rt_page_parser = RottentomatoesMediaPageParser(rtSearchParser.get_search_result_url())
-    
-    imdb_page_parser = IMDbMediaPageParser(urls["imdb"])
-    rt_page_parser = RottentomatoesMediaPageParser(urls["rottentomatoes"])
 
-    # imdb_score_value["scoreValue"] = imdb_page_parser.get_score_value()
-    # print("Fetched imdb score data...")
-
-    # rt_tomatometer_value["scoreValue"] = rt_page_parser.get_tomatometer_value()
-    # print("Fetched rt tomatometer data...")
-
-    # rt_audience_score_value["scoreValue"] = rt_page_parser.get_audience_score_value()
-    # print("Fetched rt audience_score data...")
-    
-    fetch_score_data(imdb_page_parser, rt_page_parser, imdb_score_value, rt_tomatometer_value, rt_audience_score_value)
-    
-    print_statements(
-        imdb_score_value["scoreValue"], 
-        rt_tomatometer_value["scoreValue"], 
-        rt_audience_score_value["scoreValue"])
-    print("Saving values in the database...")
-    
-    new_series = TV_Series.objects.create(title=search_term)
+def create_new_series(title):
+    new_series = TV_Series.objects.create(title=title)
     print("Created new series...")
     new_series.save()
     print("Saved new series...")
-    
-    imdb_score = imdb_score_value["scoreValue"]
+    return new_series
+
+
+def create_new_imdb_score(series, score):
     new_imdb_score = IMDbScores.objects.create(
-        media=new_series, 
-        imdb_score=imdb_score)
+        media=series,
+        imdb_score=score)
     print("Created new IMDb score...")
-    
+
     new_imdb_score.save()
     print("Saved new IMDb score...")
-    
-    
-    rt_tomatometer_score = rt_tomatometer_value["scoreValue"]
-    rt_audience_score = rt_audience_score_value["scoreValue"]
-    
+    return new_imdb_score
+
+
+def create_new_rt_score(series, tomatometer_score, audience_score):
+    rt_tomatometer_score = tomatometer_score
+    rt_audience_score = audience_score
+
     new_rt_score = RottentomatoesScores.objects.create(
-        media=new_series, 
-        tomatometer_score=rt_tomatometer_score, 
+        media=series,
+        tomatometer_score=rt_tomatometer_score,
         audience_score=rt_audience_score)
     print("Created new RT score...")
-    
+
     new_rt_score.save()
     print("Saved new RT score...")
+
+
+def print_statements(st1, st2, st3):
+    print(f'---- imdb score: {st1}')
+    print(f'---- rottentomatoes tomatometer: {st2}')
+    print(f'---- rottentomatoes audience: {st3}')
