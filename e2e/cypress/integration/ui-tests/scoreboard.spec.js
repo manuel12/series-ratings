@@ -74,11 +74,11 @@ for (const media of medias) {
           testData.ratings.rottentomatoes.scores[0].scoreValue
         );
 
-      cy.get("[data-test=audience-score-header]")
+      cy.get("[data-test=audience_score-header]")
         .should("be.visible")
         .and("contain.text", "Avg audience score");
 
-      cy.get("[data-test=audience-score-value]")
+      cy.get("[data-test=audience_score-value]")
         .should("be.visible")
         .and(
           "contain.text",
@@ -153,11 +153,11 @@ for (const media in medias) {
           testData.ratings.rottentomatoes.scores[0].scoreValue
         );
 
-      cy.get("[data-test=audience-score-header]")
+      cy.get("[data-test=audience_score-header]")
         .should("be.visible")
         .and("contain.text", "Avg audience score");
 
-      cy.get("[data-test=audience-score-value]")
+      cy.get("[data-test=audience_score-value]")
         .should("be.visible")
         .and(
           "contain.text",
@@ -177,6 +177,6 @@ describe("Scoreboard - Loading icons test", () => {
     cy.get("#user-score-value > .fa-spinner").should("be.visible");
     cy.get("#imdb-score > .fa-spinner").should("be.visible");
     cy.get("#tomatometer-value > .fa-spinner").should("be.visible");
-    cy.get("#audience-score-value > .fa-spinner").should("be.visible");
+    cy.get("#audience_score-value > .fa-spinner").should("be.visible");
   });
 });
