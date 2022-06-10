@@ -237,30 +237,24 @@
       console.error(error);
     });
 
-  const agencies = ["metacritic", "imdb", "rottentomatoes"];
-
   const addRatingAgencyValues = (agenciesData) => {
-    for (const agency of agencies) {
-      const agencyData = agenciesData.ratings[agency];
+    for (const agency in agenciesData) {
 
       if (agency === "imdb") {
-        const agencyScoreValueElem = document.getElementById(`${agency}-score`);
-        if (agencyScoreValueElem) {
-          agencyScoreValueElem.innerHTML = agencyData.scores[0].scoreValue;
+        const imdbScoreValueElem = document.getElementById(`${agency}-score`);
+        if (imdbScoreValueElem) {
+          imdbScoreValueElem.innerHTML = agenciesData[agency];
         } else {
           throw new Error(`Element with id: ${agency}-score not found!`);
         }
       } else {
-        for (const agencyScore of agencyData.scores) {
-          const agencyScoreValueElem = document.getElementById(
-            `${agencyScore.scoreTitle}-value`
-          );
-          if (agencyScoreValueElem) {
-            agencyScoreValueElem.innerHTML = agencyScore.scoreValue;
+        rtScoreValues = agenciesData["rt"];
+        for (const rtScore in rtScoreValues) {
+          const rtScoreValueElem = document.getElementById(`${rtScore}-value`);
+          if (rtScoreValueElem) {
+            rtScoreValueElem.innerHTML = rtScoreValues[rtScore];
           } else {
-            throw new Error(
-              `Element with id: ${agencyScore.scoreTitle}-value not found!`
-            );
+            throw new Error(`Element with id: ${rtScore}-value not found!`);
           }
         }
       }
