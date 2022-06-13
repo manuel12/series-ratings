@@ -12,7 +12,7 @@ class Media(models.Model):
     def imdb_scores(self):
         imdb_score_instance = IMDbScores.objects.filter(media=self).first()
         
-        if(imdb_score_instance):
+        if imdb_score_instance:
             print(f"-- IMDb score instance found for media: {self}")
             return {
                 "imdb_score": f"{imdb_score_instance.imdb_score}/10"
@@ -28,7 +28,7 @@ class Media(models.Model):
     def rottentomatoes_scores(self):
         rt_score_instance = RottentomatoesScores.objects.filter(media=self).first()
         
-        if(rt_score_instance):
+        if rt_score_instance:
             print(f"-- RT score instance found for media: {self}")
             return {
                 "tomatometer": f"{rt_score_instance.tomatometer_score}%",
