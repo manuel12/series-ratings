@@ -8,11 +8,12 @@ class Parser():
 
     def __init__(self, url):
         if not url:
-            raise TypeError(f"Url received was: {url}. Should be a valid url instead. - Aborting initialization...")
+            raise TypeError(
+                f"Url received was: {url}. Should be a valid url instead. - Aborting initialization...")
         self.url = url
         print(f"-- Opening: {self.url}...")
         self.soup = BeautifulSoup(self._get_page_source(), 'html.parser')
-    
+
     def _get_page_source(self):
         page = urllib.request.urlopen(self.url)
         return page.read()
@@ -28,7 +29,7 @@ class Parser():
 
     def get_score_elem_2(self):
         return self.soup.find_all(self.score_elem_class_2["tag"],
-                              class_=self.score_elem_class_2["class"])[1]
+                                  class_=self.score_elem_class_2["class"])[1]
 
     def get_score_value_2(self):
         if not self.get_score_elem_2():
@@ -37,16 +38,16 @@ class Parser():
 
 
 class IMDbMediaPageParser(Parser):
-    score_elem_class_1 = {"tag": "h1", 
+    score_elem_class_1 = {"tag": "h1",
                           "class": "sc-b73cd867-0 eKrKux"}
     score_elem_class_2 = {"tag": "div",
                           "class": "sc-7ab21ed2-2 kYEdvH"}
 
     def __init__(self, url):
         super().__init__(url)
-        
+
     def _clean_up_parsed_value(self, parsed_value):
-        return float(parsed_value.split("/")[0]) 
+        return float(parsed_value.split("/")[0])
 
     def get_score_value(self):
         score_value = self.get_score_value_2()
@@ -64,7 +65,7 @@ class RottentomatoesMediaPageParser(Parser):
         super().__init__(url)
 
     def _clean_up_parsed_value(self, parsed_value):
-        return int(parsed_value.replace("%", "")) 
+        return int(parsed_value.replace("%", ""))
 
     def get_tomatometer_value(self):
         tomatometer_value = self.get_score_value_1()
