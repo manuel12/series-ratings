@@ -1,21 +1,43 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %} {%block content %}
+<style>
+  @media only screen and (max-width: 768px) {
+    [class*="col-"] {
+      width: 100%;
+    }
+  }
+</style>
 
-{% block title %}Media Ratings{% endblock title %}
-
-{%block content %}
-
-<div class="container-fluid" style="height: 100px">
+<div class="container" style="height: 100px">
   <div class="row justify-content-center align-items-center h-100">
-    <div class="w-50">
-        <form action="scoreboard/" class="input-group w-75" style="margin: 0 12.5%" method="POST" data-test="search-form">
-          {% csrf_token %}
-          {{ form }}
-          <div class="input-group-append">
-            <button type="submit" class="btn btn-danger" data-test="search-button">Search</button>
-          </div>
-        </form>
+    <div class="col-9">
+      <form
+        action="scoreboard/"
+        class="input-group"
+        method="POST"
+        data-test="search-form"
+        onsubmit="return validateForm();"
+      >
+        {% csrf_token %} {{ form }}
+        <div class="input-group-append input-group-lg">
+          <button
+            type="submit"
+            class="btn btn-danger"
+            data-test="search-button"
+          >
+            Search
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
+
+<script>
+  const onlyWhiteSpace = (s) => s.match(/^\s*$/);
+  const validateForm = () => {
+    const inputElem = document.getElementById("id_search");
+    return onlyWhiteSpace(inputElem.value) ? false : true;
+  };
+</script>
 
 {% endblock content %}
