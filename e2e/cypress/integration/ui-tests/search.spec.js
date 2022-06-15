@@ -20,13 +20,14 @@ describe("Search tests", () => {
   it("should redirect to search page after clicking on header", () => {
     cy.get("[type=text]").type("Stranger Things");
     cy.get("[data-test=search-button]").click();
-    cy.url().should("eq", "http://localhost:8000/results/");
+    cy.url().should("eq", "http://localhost:8000/scoreboard/");
     cy.get("[data-test=header]").click();
+    cy.url().should("eq", "http://localhost:8000/");
   });
 
-  it("should redirect to successful results page with 'Stranger Things' input value", () => {
+  it("should redirect to successful scoreboard page with 'Stranger Things' input value", () => {
     cy.get("[type=text]").type("Stranger Things");
     cy.get("[data-test=search-button]").click();
-    cy.url().should("eq", "http://localhost:8000/results/");
+    cy.url().should("eq", "http://localhost:8000/scoreboard/");
   });
 });
