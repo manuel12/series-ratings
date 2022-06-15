@@ -1,0 +1,27 @@
+[
+  {
+    "title": "Stranger Things",
+    "rt": { "tomatometer": "92%", "audience_score": "91%" },
+    "imdb": "8.7/10"
+  },
+  {
+    "title": "South Park",
+    "rt": { "tomatometer": "80%", "audience_score": "87%" },
+    "imdb": "8.7/10"
+  },
+  {
+    "title": "The Wire",
+    "rt": { "tomatometer": "94%", "audience_score": "97%" },
+    "imdb": "9.3/10"
+  },
+  {
+    "title": "Six Feet Under",
+    "rt": { "tomatometer": "81%", "audience_score": "97%" },
+    "imdb": "8.7/10"
+  },
+  {
+    "title": "Six Feet Under",
+    "rt": { "tomatometer": "81%", "audience_score": "97%" },
+    "imdb": "8.7/10"
+  }
+]
