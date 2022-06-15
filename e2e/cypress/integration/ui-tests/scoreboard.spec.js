@@ -1,51 +1,29 @@
 /// <reference types="cypress" />
 
-let mockData = require("../../fixtures/mock-data.json");
+let mockData = require("../../fixtures/test-data.json");
 
 const medias = [
-  "stranger-things",
-  "evil-dead-II",
-  "alien",
-  "dawn-of-the-dead",
-  "poltergeist",
+  "Stranger Things",
+  "South Park",
+  "Alien",
+  "Dawn of the Dead",
+  "Poltergeist",
 ];
 
-for (const media of medias) {
-  let testData = media === "stranger-things" ? mockData[0] : mockData[1];
+for (const media in medias) {
+  let testData = mockData[media];
 
   describe("Scoreboard - Search results tests", () => {
     beforeEach(() => {
       cy.visit("/");
-      cy.get("#id_search").type(media);
+      cy.get("#id_search").type(testData.title);
       cy.get("[data-test=search-button]").should("be.visible").click();
     });
 
     it("should display current media title", () => {
       cy.get("[data-test=media-title]")
         .should("be.visible")
-        .and("contain.text", testData.mediaTitle);
-    });
-
-    it("should display current media metacritic data", () => {
-      cy.get("[data-test=metacritic-header]")
-        .should("be.visible")
-        .and("contain.text", "Metacritic");
-
-      cy.get("[data-test=metascore-header]")
-        .should("be.visible")
-        .and("contain.text", "Metascore");
-
-      cy.get("[data-test=metascore-value]")
-        .should("be.visible")
-        .and("contain.text", testData.ratings.metacritic.scores[0].scoreValue);
-
-      cy.get("[data-test=user-score-header]")
-        .should("be.visible")
-        .and("contain.text", "Userscore");
-
-      cy.get("[data-test=user-score-value]")
-        .should("be.visible")
-        .and("contain.text", testData.ratings.metacritic.scores[1].scoreValue);
+        .and("contain.text", testData.title);
     });
 
     it("should display current media imdb data", () => {
@@ -55,7 +33,7 @@ for (const media of medias) {
 
       cy.get("[data-test=imdb-score-value]")
         .should("be.visible")
-        .and("contain.text", testData.ratings.imdb.scores[0].scoreValue);
+        .and("contain.text", testData.imdb);
     });
 
     it("should display current media rottentomatoes data", () => {
@@ -69,10 +47,7 @@ for (const media of medias) {
 
       cy.get("[data-test=tomatometer-value]")
         .should("be.visible")
-        .and(
-          "contain.text",
-          testData.ratings.rottentomatoes.scores[0].scoreValue
-        );
+        .and("contain.text", testData.rt.tomatometer);
 
       cy.get("[data-test=audience_score-header]")
         .should("be.visible")
@@ -80,10 +55,7 @@ for (const media of medias) {
 
       cy.get("[data-test=audience_score-value]")
         .should("be.visible")
-        .and(
-          "contain.text",
-          testData.ratings.rottentomatoes.scores[1].scoreValue
-        );
+        .and("contain.text", testData.rt.audience_score);
     });
   });
 }
@@ -93,38 +65,17 @@ for (const media in medias) {
 
   describe("Scoreboard - Using intercept tests", () => {
     beforeEach(() => {
+      cy.intercept("http://localhost:8000/fetch-score-data/*", mockData[media]);
+      cy.visit("/");
       cy.log(media);
-
-      cy.intercept("http://localhost:8000/scoreboard-data/*", mockData[media]);
-      cy.visit("/scoreboard");
+      cy.get("#id_search").type(testData.title);
+      cy.get("[data-test=search-button]").should("be.visible").click();
     });
 
     it("should display current media title", () => {
       cy.get("[data-test=media-title]")
         .should("be.visible")
-        .and("contain.text", testData.mediaTitle);
-    });
-
-    it("should display current media metacritic data", () => {
-      cy.get("[data-test=metacritic-header]")
-        .should("be.visible")
-        .and("contain.text", "Metacritic");
-
-      cy.get("[data-test=metascore-header]")
-        .should("be.visible")
-        .and("contain.text", "Metascore");
-
-      cy.get("[data-test=metascore-value]")
-        .should("be.visible")
-        .and("contain.text", testData.ratings.metacritic.scores[0].scoreValue);
-
-      cy.get("[data-test=user-score-header]")
-        .should("be.visible")
-        .and("contain.text", "Userscore");
-
-      cy.get("[data-test=user-score-value]")
-        .should("be.visible")
-        .and("contain.text", testData.ratings.metacritic.scores[1].scoreValue);
+        .and("contain.text", testData.title);
     });
 
     it("should display current media imdb data", () => {
@@ -134,7 +85,7 @@ for (const media in medias) {
 
       cy.get("[data-test=imdb-score-value]")
         .should("be.visible")
-        .and("contain.text", testData.ratings.imdb.scores[0].scoreValue);
+        .and("contain.text", testData.imdb);
     });
 
     it("should display current media rottentomatoes data", () => {
@@ -148,10 +99,7 @@ for (const media in medias) {
 
       cy.get("[data-test=tomatometer-value]")
         .should("be.visible")
-        .and(
-          "contain.text",
-          testData.ratings.rottentomatoes.scores[0].scoreValue
-        );
+        .and("contain.text", testData.rt.tomatometer);
 
       cy.get("[data-test=audience_score-header]")
         .should("be.visible")
@@ -159,24 +107,24 @@ for (const media in medias) {
 
       cy.get("[data-test=audience_score-value]")
         .should("be.visible")
-        .and(
-          "contain.text",
-          testData.ratings.rottentomatoes.scores[1].scoreValue
-        );
+        .and("contain.text", testData.rt.audience_score);
     });
   });
 }
 
-describe("Scoreboard - Loading icons test", () => {
-  before(() => {
-    cy.visit("/scoreboard");
-  })
-  
-  it("should show loading icons before data is fetcehd", () => {
-    cy.get("#metascore-value > .fa-spinner").should("be.visible");
-    cy.get("#user-score-value > .fa-spinner").should("be.visible");
-    cy.get("#imdb-score > .fa-spinner").should("be.visible");
-    cy.get("#tomatometer-value > .fa-spinner").should("be.visible");
-    cy.get("#audience_score-value > .fa-spinner").should("be.visible");
+for (const media in medias) {
+  describe("Scoreboard - Loading icons test", () => {
+    before(() => {
+      cy.intercept("http://localhost:8000/fetch-score-data/*", {});
+      cy.visit("/");
+      cy.get("#id_search").type(media);
+      cy.get("[data-test=search-button]").should("be.visible").click();
+    });
+
+    it("should show loading icons before data is fetched", () => {
+      cy.get("#imdb-score > .spinner-border").should("be.visible");
+      cy.get("#tomatometer-value > .spinner-border").should("be.visible");
+      cy.get("#audience_score-value > .spinner-border").should("be.visible");
+    });
   });
-});
+}
