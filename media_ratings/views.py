@@ -4,6 +4,7 @@ from .forms import SearchForm
 from .utils import capitalize_phrase, sanitize_phrase
 from .score_manager import ScoreManager
 
+
 # Create your views here.
 
 
