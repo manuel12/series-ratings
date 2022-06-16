@@ -19,22 +19,30 @@ class Parser():
         return page.read()
 
     def get_score_elem_1(self):
-        return self.soup.find(self.score_elem_class_1["tag"],
-                              class_=self.score_elem_class_1["class"])
+        try:
+            return self.soup.find(self.score_elem_class_2["tag"],
+                                  class_=self.score_elem_class_2["class"])
+        except Exception as e:
+            return None
 
     def get_score_value_1(self):
-        if not self.get_score_elem_1():
+        score_elem_1 = self.get_score_elem_1()
+        if not score_elem_1:
             return None
-        return self.get_score_elem_1().text.strip()
+        return score_elem_1.text.strip()
 
     def get_score_elem_2(self):
-        return self.soup.find_all(self.score_elem_class_2["tag"],
-                                  class_=self.score_elem_class_2["class"])[1]
+        try:
+            return self.soup.find_all(self.score_elem_class_2["tag"],
+                                      class_=self.score_elem_class_2["class"])[1]
+        except Exception as e:
+            return None
 
     def get_score_value_2(self):
-        if not self.get_score_elem_2():
+        score_elem_2 = self.get_score_elem_2()
+        if not score_elem_2:
             return None
-        return self.get_score_elem_2().text.strip()
+        return score_elem_2.text.strip()
 
 
 class IMDbMediaPageParser(Parser):
@@ -69,10 +77,35 @@ class RottentomatoesMediaPageParser(Parser):
 
     def get_tomatometer_value(self):
         tomatometer_value = self.get_score_value_1()
-        clean_value = self._clean_up_parsed_value(tomatometer_value)
-        return clean_value
+        if tomatometer_value:
+            clean_value = self._clean_up_parsed_value(tomatometer_value)
+            return clean_value
+        return None
 
     def get_audience_score_value(self):
         audience_value = self.get_score_value_2()
-        clean_value = self._clean_up_parsed_value(audience_value)
-        return clean_value
+
+        if audience_value:
+            clean_value = self._clean_up_parsed_value(audience_value)
+            return clean_value
+        return None
+
+    def get_score_value_1(self):
+        try:
+            tomatometer_score_wrapper = self.soup.select(
+              'div.mop-ratings-wrap__half.critic-score')[0]
+            tomatometer_score_element = tomatometer_score_wrapper.find(
+              "span", "mop-ratings-wrap__percentage")
+            return tomatometer_score_element.text.strip()
+        except Exception as e:
+            return None
+
+    def get_score_value_2(self):
+        try:
+            audience_score_wrapper = self.soup.select(
+              'div.mop-ratings-wrap__half.audience-score')[0]
+            audience_score_element = audience_score_wrapper.find(
+              "span", "mop-ratings-wrap__percentage")
+            return audience_score_element.text.strip()
+        except Exception as e:
+            return None
