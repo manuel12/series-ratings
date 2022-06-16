@@ -20,6 +20,10 @@ class ScoreManager():
         self.imdb_score = "N/A"
         self.rt_tomatometer = "N/A"
         self.rt_audience_score = "N/A"
+
+        self.score_data = {}
+        self.score_data["rt"] = {}
+
         self.complete_data_available = False
 
         self.search_term = standardize_phrase(search_term)
@@ -36,6 +40,11 @@ class ScoreManager():
                 "tomatometer"]
             self.rt_audience_score = tv_series.rottentomatoes_scores()[
                 "audience_score"]
+
+            self.score_data["imdb"] = self.imdb_score
+            self.score_data["rt"]["tomatometer"] = self.rt_tomatometer
+            self.score_data["rt"]["audience_score"] = self.rt_audience_score
+
             print(
                 f"-- {tv_series} has scores: {self.imdb_score, self.rt_tomatometer, self.rt_audience_score}")
 
@@ -49,17 +58,12 @@ class ScoreManager():
 
     def get_score_data(self):
         print(f"-- Getting score data")
-        score_data = {}
-        score_data["rt"] = {}
 
         if self.complete_data_available:
             print(f"-- Returning score data")
-            score_data["imdb"] = self.imdb_score
-            score_data["rt"]["tomatometer"] = self.rt_tomatometer
-            score_data["rt"]["audience_score"] = self.rt_audience_score
-            return score_data
+            return self.score_data
         else:
-            # Fetch each of the missing score data.
+            # Fetch each piece of the missing score data.
             if "N/A" in self.imdb_score:
                 print(f"-- Fetching score data for imdb")
 
@@ -72,13 +76,14 @@ class ScoreManager():
 
                 # Save imdb model instance to db.
                 self.save_model_instance(new_imdb_score)
-                score_data["imdb"] = f"{imdb_score_value}/10"
+                self.score_data["imdb"] = f"{imdb_score_value}/10" if imdb_score_value else 'N/A'
 
-            if "N/A" in [self.rt_tomatometer, self.rt_audience_score]:
+            if "N/A" in (self.rt_tomatometer, self.rt_audience_score):
                 print(f"-- Fetching score data for rt")
 
                 # Fetch rt score.
                 rt_score_values = self.fetch_score("rt")
+                print(rt_score_values)
 
                 # Create rt model instance.
                 new_rt_score = self.create_score_model_instance("rt",
@@ -87,10 +92,14 @@ class ScoreManager():
 
                 # Save rt model instance to db.
                 self.save_model_instance(new_rt_score)
-                score_data["rt"]["tomatometer"] = f"{rt_score_values['tomatometer']}%"
-                score_data["rt"]["audience_score"] = f"{rt_score_values['audience_score']}%"
 
-            return score_data
+                tomatometer_score = rt_score_values["tomatometer"]
+                audience_score = rt_score_values["audience_score"]
+
+                self.score_data["rt"]["tomatometer"] = f"{tomatometer_score}%" if tomatometer_score else 'N/A',
+                self.score_data["rt"]["audience_score"] = f"{audience_score}%" if audience_score else 'N/A'
+
+            return self.score_data
 
     def fetch_score(self, agency):
         if agency == "imdb":
