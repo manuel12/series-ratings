@@ -10,37 +10,32 @@ class Media(models.Model):
     description = models.TextField(blank=True)
     
     def imdb_scores(self):
+        imdb_score = None
         imdb_score_instance = IMDbScores.objects.filter(media=self).first()
         
         if imdb_score_instance:
-            print(f"-- IMDb score instance found for media: {self}")
-            return {
-                "imdb_score": f"{imdb_score_instance.imdb_score}/10"
-            }
-        else:
-            return {
-                "imdb_score":   "N/A"
-            }
+              imdb_score = imdb_score_instance.imdb_score
+        return {
+            "imdb_score": f"{imdb_score}/10" if imdb_score else "N/A"
+        }
 
     class Meta:
         verbose_name_plural = "Medias"
 
     def rottentomatoes_scores(self):
+        tomatometer_score = None
+        audience_score = None
         rt_score_instance = RottentomatoesScores.objects.filter(media=self).first()
-        
+
         if rt_score_instance:
-            print(f"-- RT score instance found for media: {self}")
-            return {
-                "tomatometer": f"{rt_score_instance.tomatometer_score}%",
-                "audience_score": f"{rt_score_instance.audience_score}%"
-            }
-        else:
-            return {
-                "tomatometer": "N/A",
-                "audience_score": "N/A"
-            }
+            tomatometer_score = rt_score_instance.tomatometer_score
+            audience_score = rt_score_instance.audience_score
+        return {
+          "tomatometer": f"{tomatometer_score}%" if tomatometer_score else 'N/A',
+          "audience_score": f"{audience_score}%" if audience_score else 'N/A'
+        }
     
-        
+
     def __str__(self):
         return self.title
 
@@ -66,14 +61,14 @@ class MediaScore(models.Model):
         verbose_name_plural = "Media Scores"
     
 class IMDbScores(MediaScore):
-    imdb_score = models.FloatField(blank=True)
+    imdb_score = models.FloatField(null=True)
 
     class Meta:
         verbose_name_plural = "IMDb Scores"
 
 class RottentomatoesScores(MediaScore):
-    tomatometer_score = models.IntegerField(blank=True)
-    audience_score = models.IntegerField(blank=True)
+    tomatometer_score = models.IntegerField(null=True)
+    audience_score = models.IntegerField(null=True)
 
     class Meta:
         verbose_name_plural = "Rottentomatoes Scores"
