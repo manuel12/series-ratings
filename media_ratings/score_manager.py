@@ -65,39 +65,43 @@ class ScoreManager():
         else:
             # Fetch each piece of the missing score data.
             if "N/A" in self.imdb_score:
+                imdb_score_value = None
                 print(f"-- Fetching score data for imdb")
 
                 # Fetch imdb score.
                 imdb_score_value = self.fetch_score("imdb")
 
-                # Create imdb model instance.
-                new_imdb_score = self.create_score_model_instance(
-                    "imdb", imdb_score_value)
+                if imdb_score_value:
+                    # Create imdb model instance.
+                    new_imdb_score_model = self.create_score_model_instance(
+                        "imdb", imdb_score_value)
 
-                # Save imdb model instance to db.
-                self.save_model_instance(new_imdb_score)
+                    # Save imdb model instance to db.
+                    self.save_model_instance(new_imdb_score_model)
                 self.score_data["imdb"] = f"{imdb_score_value}/10" if imdb_score_value else 'N/A'
 
             if "N/A" in (self.rt_tomatometer, self.rt_audience_score):
+                tomatometer_score_value = None
+                audience_score_value = None
                 print(f"-- Fetching score data for rt")
 
                 # Fetch rt score.
                 rt_score_values = self.fetch_score("rt")
-                print(rt_score_values)
 
-                # Create rt model instance.
-                new_rt_score = self.create_score_model_instance("rt",
-                                                                rt_score_values["tomatometer"],
-                                                                rt_score_values["audience_score"])
+                if rt_score_values:
+                    # Create rt model instance.
+                    new_rt_score_model = self.create_score_model_instance("rt",
+                                                                    rt_score_values["tomatometer"],
+                                                                    rt_score_values["audience_score"])
 
-                # Save rt model instance to db.
-                self.save_model_instance(new_rt_score)
+                    # Save rt model instance to db.
+                    self.save_model_instance(new_rt_score_model)
 
-                tomatometer_score = rt_score_values["tomatometer"]
-                audience_score = rt_score_values["audience_score"]
+                    tomatometer_score_value = rt_score_values["tomatometer"]
+                    audience_score_value = rt_score_values["audience_score"]
 
-                self.score_data["rt"]["tomatometer"] = f"{tomatometer_score}%" if tomatometer_score else 'N/A',
-                self.score_data["rt"]["audience_score"] = f"{audience_score}%" if audience_score else 'N/A'
+                self.score_data["rt"]["tomatometer"] = f"{tomatometer_score_value}%" if tomatometer_score_value else 'N/A',
+                self.score_data["rt"]["audience_score"] = f"{audience_score_value}%" if audience_score_value else 'N/A'
 
             return self.score_data
 
@@ -114,14 +118,18 @@ class ScoreManager():
     def fetch_score_helper(self, agency, search_result_parser, media_page_parser):
         search_parsers = search_result_parser(self.search_term)
         search_result_url = search_parsers.get_search_result_url()
-        page_parser = media_page_parser(search_result_url)
-        if agency == "rt":
-            score_values = {}
-            score_values["tomatometer"] = page_parser.get_tomatometer_value()
-            score_values["audience_score"] = page_parser.get_audience_score_value()
-            return score_values
-        score_value = page_parser.get_score_value()
-        return score_value
+
+        if(search_result_url):
+            page_parser = media_page_parser(search_result_url)
+            if agency == "rt":
+                score_values = {}
+                score_values["tomatometer"] = page_parser.get_tomatometer_value()
+                score_values["audience_score"] = page_parser.get_audience_score_value()
+                return score_values
+            score_value = page_parser.get_score_value()
+            return score_value
+        else:
+            return False
 
     def create_score_model_instance(self, agency, score_value_one, score_value_two=None):
         if agency == "imdb":
