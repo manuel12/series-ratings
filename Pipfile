@@ -12,6 +12,7 @@ selenium = "*"
 webdriver-manager = "*"
 scrapy = "*"
 google-search-results = "*"
+validators = "*"
 
 [dev-packages]
 
