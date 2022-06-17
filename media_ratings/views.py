@@ -42,7 +42,7 @@ def fetch_score_data(request):
         score_data = sc.get_score_data()
         print(score_data)
     except Exception as e:
-        print(e)
+        print(f"On fetch_score_data - Error: {e}")
         score_data = {
             "rt": {
                 "tomatometer": "N/A",

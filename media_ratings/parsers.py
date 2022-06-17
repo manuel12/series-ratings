@@ -3,8 +3,8 @@ import urllib.request
 
 
 class Parser():
-    score_elem_class_1 = None
-    score_elem_class_2 = None
+    elem_class_1 = None
+    elem_class_2 = None
 
     def __init__(self, url):
         if not url:
@@ -18,37 +18,43 @@ class Parser():
         page = urllib.request.urlopen(self.url)
         return page.read()
 
-    def get_score_elem_1(self):
+    def get_elem_1(self):
+        if not self.elem_class_1:
+            raise AttributeError("You need to assign a value to elem_class_1 in order to call this function")
         try:
-            return self.soup.find(self.score_elem_class_2["tag"],
-                                  class_=self.score_elem_class_2["class"])
+            return self.soup.find(self.elem_class_1["tag"],
+                                  class_=self.elem_class_1["class"])
         except Exception as e:
             return None
 
-    def get_score_value_1(self):
-        score_elem_1 = self.get_score_elem_1()
-        if not score_elem_1:
-            return None
-        return score_elem_1.text.strip()
+    def get_value_1(self):
+        score_elem_1 = self.get_elem_1()
+        if score_elem_1:
+            return score_elem_1.text.strip()
+        return None
 
-    def get_score_elem_2(self):
+
+    def get_elem_2(self):
+        if not self.elem_class_2:
+            raise AttributeError("You need to assign a value to elem_class_2 in order to call this function")
         try:
-            return self.soup.find_all(self.score_elem_class_2["tag"],
-                                      class_=self.score_elem_class_2["class"])[1]
+            return self.soup.find(self.elem_class_2["tag"],
+                                      class_=self.elem_class_2["class"])
         except Exception as e:
             return None
 
-    def get_score_value_2(self):
-        score_elem_2 = self.get_score_elem_2()
-        if not score_elem_2:
-            return None
-        return score_elem_2.text.strip()
+    def get_value_2(self):
+        score_elem_2 = self.get_elem_2()
+        if score_elem_2:
+            return score_elem_2.text.strip()
+        return None
+
 
 
 class IMDbMediaPageParser(Parser):
-    score_elem_class_1 = {"tag": "h1",
-                          "class": "sc-b73cd867-0 eKrKux"}
-    score_elem_class_2 = {"tag": "div",
+    elem_class_1 = {"tag": "div",
+                          "class": "sc-7ab21ed2-2 kYEdvH"}
+    elem_class_2 = {"tag": "div",
                           "class": "sc-7ab21ed2-2 kYEdvH"}
 
     def __init__(self, url):
@@ -58,15 +64,15 @@ class IMDbMediaPageParser(Parser):
         return float(parsed_value.split("/")[0])
 
     def get_score_value(self):
-        score_value = self.get_score_value_2()
+        score_value = self.get_value_2()
         clean_score_value = self._clean_up_parsed_value(score_value)
         return clean_score_value
 
 
 class RottentomatoesMediaPageParser(Parser):
-    score_elem_class_1 = {"tag": "span",
+    elem_class_1 = {"tag": "span",
                           "class": "mop-ratings-wrap__percentage"}
-    score_elem_class_2 = {"tag": "span",
+    elem_class_2 = {"tag": "span",
                           "class": "mop-ratings-wrap__percentage"}
 
     def __init__(self, url):
@@ -76,21 +82,21 @@ class RottentomatoesMediaPageParser(Parser):
         return int(parsed_value.replace("%", ""))
 
     def get_tomatometer_value(self):
-        tomatometer_value = self.get_score_value_1()
+        tomatometer_value = self.get_value_1()
         if tomatometer_value:
             clean_value = self._clean_up_parsed_value(tomatometer_value)
             return clean_value
         return None
 
     def get_audience_score_value(self):
-        audience_value = self.get_score_value_2()
+        audience_value = self.get_value_2()
 
         if audience_value:
             clean_value = self._clean_up_parsed_value(audience_value)
             return clean_value
         return None
 
-    def get_score_value_1(self):
+    def get_value_1(self):
         try:
             tomatometer_score_wrapper = self.soup.select(
               'div.mop-ratings-wrap__half.critic-score')[0]
@@ -100,7 +106,7 @@ class RottentomatoesMediaPageParser(Parser):
         except Exception as e:
             return None
 
-    def get_score_value_2(self):
+    def get_value_2(self):
         try:
             audience_score_wrapper = self.soup.select(
               'div.mop-ratings-wrap__half.audience-score')[0]
