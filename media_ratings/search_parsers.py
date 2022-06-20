@@ -8,11 +8,11 @@ class SearchResultsParser(Parser):
     no_results_text = ""
     no_results_cls = ""
 
-    def __init__(self, search_query):
+    def __init__(self, search_query, html_page=""):
         self.search_query = search_query
         self.url = self.search_url_prefix + self.search_query + self.search_url_suffix
         self.url = self._clean_up_url(self.url)
-        super().__init__(self.url)
+        super().__init__(self.url, html_page)
 
     def _clean_up_url(self, url):
         print(f"-- Cleaning url: {url}...")
@@ -110,7 +110,7 @@ class RottentomatoesSearchResultsParser(SearchResultsParser):
     def get_tv_search_results(self):
           tv_search_results_section = self.get_tv_search_results_section()
           tv_search_results = tv_search_results_section.find_all(
-              "search-page-media-row")
+              self.search_result_elem_cls)
           return tv_search_results
 
     def get_tv_search_results_urls(self):
