@@ -6,15 +6,22 @@ class Parser():
     elem_class_1 = None
     elem_class_2 = None
 
-    def __init__(self, url):
-        if not url:
-            raise TypeError(
-                f"Url received was: {url}. Should be a valid url instead. - Aborting initialization...")
-        self.url = url
-        print(f"-- Opening: {self.url}...")
+    def __init__(self, url="", html_page=""):
+        self.html_page = html_page
+        if not self.html_page:
+            if not url:
+                raise TypeError(
+                    f"Url received was: {url}. Should be a valid url instead. - Aborting initialization...")
+            else:
+                self.url = url
+
         self.soup = BeautifulSoup(self._get_page_source(), 'html.parser')
 
     def _get_page_source(self):
+        if self.html_page:
+            return self.html_page
+
+        print(f"-- Opening: {self.url}...")
         page = urllib.request.urlopen(self.url)
         return page.read()
 
@@ -43,6 +50,7 @@ class Parser():
         except Exception as e:
             return None
 
+
     def get_value_2(self):
         score_elem_2 = self.get_elem_2()
         if score_elem_2:
@@ -70,10 +78,10 @@ class IMDbMediaPageParser(Parser):
 
 
 class RottentomatoesMediaPageParser(Parser):
-    elem_class_1 = {"tag": "span",
-                          "class": "mop-ratings-wrap__percentage"}
-    elem_class_2 = {"tag": "span",
-                          "class": "mop-ratings-wrap__percentage"}
+    elem_class_1 = {"tag": None,
+                          "class": "#tomato_meter_link > span > span.mop-ratings-wrap__percentage"}
+    elem_class_2 = {"tag": None,
+                          "class": "div.mop-ratings-wrap__half.audience-score > h2 > a > span > span.mop-ratings-wrap__percentage"}
 
     def __init__(self, url):
         super().__init__(url)
@@ -96,22 +104,18 @@ class RottentomatoesMediaPageParser(Parser):
             return clean_value
         return None
 
-    def get_value_1(self):
+    def get_elem_1(self):
+        if not self.elem_class_1:
+            raise AttributeError("You need to assign a value to elem_class_1 in order to call this function")
         try:
-            tomatometer_score_wrapper = self.soup.select(
-              'div.mop-ratings-wrap__half.critic-score')[0]
-            tomatometer_score_element = tomatometer_score_wrapper.find(
-              "span", "mop-ratings-wrap__percentage")
-            return tomatometer_score_element.text.strip()
+            return self.soup.select(self.elem_class_1["class"])[0]
         except Exception as e:
             return None
 
-    def get_value_2(self):
+    def get_elem_2(self):
+        if not self.elem_class_2:
+            raise AttributeError("You need to assign a value to elem_class_2 in order to call this function")
         try:
-            audience_score_wrapper = self.soup.select(
-              'div.mop-ratings-wrap__half.audience-score')[0]
-            audience_score_element = audience_score_wrapper.find(
-              "span", "mop-ratings-wrap__percentage")
-            return audience_score_element.text.strip()
+            return self.soup.select(self.elem_class_2["class"])[0]
         except Exception as e:
             return None
