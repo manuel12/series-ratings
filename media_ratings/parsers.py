@@ -27,7 +27,8 @@ class Parser():
 
     def get_elem_1(self):
         if not self.elem_class_1:
-            raise AttributeError("You need to assign a value to elem_class_1 in order to call this function")
+            raise AttributeError(
+                "You need to assign a value to elem_class_1 in order to call this function")
         try:
             return self.soup.find(self.elem_class_1["tag"],
                                   class_=self.elem_class_1["class"])
@@ -40,16 +41,15 @@ class Parser():
             return score_elem_1.text.strip()
         return None
 
-
     def get_elem_2(self):
         if not self.elem_class_2:
-            raise AttributeError("You need to assign a value to elem_class_2 in order to call this function")
+            raise AttributeError(
+                "You need to assign a value to elem_class_2 in order to call this function")
         try:
             return self.soup.find(self.elem_class_2["tag"],
-                                      class_=self.elem_class_2["class"])
+                                  class_=self.elem_class_2["class"])
         except Exception as e:
             return None
-
 
     def get_value_2(self):
         score_elem_2 = self.get_elem_2()
@@ -58,12 +58,11 @@ class Parser():
         return None
 
 
-
 class IMDbMediaPageParser(Parser):
     elem_class_1 = {"tag": "div",
-                          "class": "sc-7ab21ed2-2 kYEdvH"}
+                    "class": "sc-7ab21ed2-2 kYEdvH"}
     elem_class_2 = {"tag": "div",
-                          "class": "sc-7ab21ed2-2 kYEdvH"}
+                    "class": "sc-7ab21ed2-2 kYEdvH"}
 
     def __init__(self, url):
         super().__init__(url)
@@ -79,9 +78,9 @@ class IMDbMediaPageParser(Parser):
 
 class RottentomatoesMediaPageParser(Parser):
     elem_class_1 = {"tag": None,
-                          "class": "#tomato_meter_link > span > span.mop-ratings-wrap__percentage"}
+                    "class": "#tomato_meter_link > span > span.mop-ratings-wrap__percentage"}
     elem_class_2 = {"tag": None,
-                          "class": "div.mop-ratings-wrap__half.audience-score > h2 > a > span > span.mop-ratings-wrap__percentage"}
+                    "class": "div.mop-ratings-wrap__half.audience-score > h2 > a > span > span.mop-ratings-wrap__percentage"}
 
     def __init__(self, url):
         super().__init__(url)
@@ -106,7 +105,8 @@ class RottentomatoesMediaPageParser(Parser):
 
     def get_elem_1(self):
         if not self.elem_class_1:
-            raise AttributeError("You need to assign a value to elem_class_1 in order to call this function")
+            raise AttributeError(
+                "You need to assign a value to elem_class_1 in order to call this function")
         try:
             return self.soup.select(self.elem_class_1["class"])[0]
         except Exception as e:
@@ -114,7 +114,8 @@ class RottentomatoesMediaPageParser(Parser):
 
     def get_elem_2(self):
         if not self.elem_class_2:
-            raise AttributeError("You need to assign a value to elem_class_2 in order to call this function")
+            raise AttributeError(
+                "You need to assign a value to elem_class_2 in order to call this function")
         try:
             return self.soup.select(self.elem_class_2["class"])[0]
         except Exception as e:
