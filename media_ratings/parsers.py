@@ -72,9 +72,10 @@ class IMDbMediaPageParser(Parser):
 
     def get_score_value(self):
         score_value = self.get_value_2()
-        clean_score_value = self._clean_up_parsed_value(score_value)
-        return clean_score_value
-
+        if score_value:
+            clean_score_value = self._clean_up_parsed_value(score_value)
+            return clean_score_value
+        return None
 
 class RottentomatoesMediaPageParser(Parser):
     elem_class_1 = {"tag": None,
