@@ -91,16 +91,12 @@ class ScoreManager():
                 if rt_score_values:
                     # Create rt model instance.
                     new_rt_score_model = self.create_score_model_instance("rt",
-                                                                    rt_score_values["tomatometer"],
-                                                                    rt_score_values["audience_score"])
+                                                                          rt_score_values["tomatometer"],
+                                                                          rt_score_values["audience_score"])
+                    tomatometer_score_value = new_rt_score_model.tomatometer_score
+                    audience_score_value = new_rt_score_model.audience_score
 
-                    # Save rt model instance to db.
-                    self.save_model_instance(new_rt_score_model)
-
-                    tomatometer_score_value = rt_score_values["tomatometer"]
-                    audience_score_value = rt_score_values["audience_score"]
-
-                self.score_data["rt"]["tomatometer"] = f"{tomatometer_score_value}%" if tomatometer_score_value else 'N/A',
+                self.score_data["rt"]["tomatometer"] = f"{tomatometer_score_value}%" if tomatometer_score_value else 'N/A'
                 self.score_data["rt"]["audience_score"] = f"{audience_score_value}%" if audience_score_value else 'N/A'
 
             return self.score_data
@@ -116,8 +112,11 @@ class ScoreManager():
                                            RottentomatoesMediaPageParser)
 
     def fetch_score_helper(self, agency, search_result_parser, media_page_parser):
+        print(f"On fetch_score_helper for {self.search_term}")
+
         search_parsers = search_result_parser(self.search_term)
         search_result_url = search_parsers.get_search_result_url()
+        print(f"Search_result_url {search_result_url}")
 
         if(search_result_url):
             page_parser = media_page_parser(search_result_url)
@@ -126,10 +125,11 @@ class ScoreManager():
                 score_values["tomatometer"] = page_parser.get_tomatometer_value()
                 score_values["audience_score"] = page_parser.get_audience_score_value()
                 return score_values
-            score_value = page_parser.get_score_value()
-            return score_value
+            else:
+                score_value = page_parser.get_score_value()
+                return score_value
         else:
-            return False
+            return None
 
     def create_score_model_instance(self, agency, score_value_one, score_value_two=None):
         if agency == "imdb":
@@ -146,7 +146,3 @@ class ScoreManager():
 
     def create_score_model_instance_helper(self, scores_model, *args, **kwargs):
         return scores_model.objects.create(*args, **kwargs)
-
-    def save_model_instance(self, model_instance):
-        model_instance.save()
-        print(f"-- Saved new {model_instance.__class__.__name__} score...")
