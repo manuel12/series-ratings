@@ -1,3 +1,4 @@
+from tkinter import N
 from .parsers import Parser
 
 
@@ -38,14 +39,22 @@ class SearchResultsParser(Parser):
 
     def get_first_search_result_url(self):
         """Returns the complete url for the first search result."""
-        search_result_url = self.get_search_urls()[0]
-        return search_result_url
+        search_result_urls = self.get_search_urls()
+        if search_result_urls:
+            search_result_url = self.get_search_urls()[0]
+            return search_result_url
+        else:
+            return None
 
     def get_first_search_result_text(self):
         """Returns the text for the first search result."""
-        first_search_result_text = self.get_search_results()[
-            0].find('a').text.strip()
-        return first_search_result_text
+        search_result_urls = self.get_search_urls()
+        if search_result_urls:
+            first_search_result_text = self.get_search_results()[
+                0].find('a').text.strip()
+            return first_search_result_text
+        else:
+            return None
 
     def no_results_found(self):
         return True if len(self.get_search_results()) == 0 else False
@@ -66,22 +75,30 @@ class IMDBSearchResultsParser(SearchResultsParser):
         return [url.find('a')['href'] for url in self.get_search_results()]
 
     def get_first_search_result_text(self):
-        first_search_result_text = self.get_search_results()[
-            0].find('a').text.strip()
-        return first_search_result_text
+        search_result_urls = self.get_search_urls()
+        if search_result_urls:
+            first_search_result_text = self.get_search_results()[
+                0].find('a').text.strip()
+            return first_search_result_text
+        else:
+            return None
 
     def get_first_search_result_url(self):
-        search_result_url = f"https://www.imdb.com{self.get_search_urls()[0]}"
-        return search_result_url
+        search_result_urls = self.get_search_urls()
+        if search_result_urls:
+            search_result_url = f"https://www.imdb.com{self.get_search_urls()[0]}"
+            return search_result_url
+        else:
+            return None
 
     def get_search_result_url(self):
         if self.no_results_found():
-            return False
+            return None
 
         search_result_text = self.get_first_search_result_text()
 
-        if not self.validate_search_result_text(search_result_text):
-            return False
+        # if not self.validate_search_result_text(search_result_text):
+        #     return None
         return self.get_first_search_result_url()
 
     def no_results_found(self):
@@ -119,21 +136,29 @@ class RottentomatoesSearchResultsParser(SearchResultsParser):
         return [tv_url.find('a')['href'] for tv_url in tv_search_results]
 
     def get_first_search_result_text(self):
-        first_search_result_text = self.get_tv_search_results()[0].find_all('a')[
-            1].text.strip()
-        return first_search_result_text
+        tv_search_result_urls = self.get_tv_search_results_urls()
+        if tv_search_result_urls:
+            first_search_result_text = self.get_tv_search_results()[0].find_all('a')[
+                1].text.strip()
+            return first_search_result_text
+        else:
+            return None
 
     def get_first_tv_search_result_url(self):
-        tv_search_result_url = self.get_tv_search_results_urls()[0]
-        return tv_search_result_url
+        tv_search_result_urls = self.get_tv_search_results_urls()
+        if tv_search_result_urls:
+            tv_search_result_url = self.get_tv_search_results_urls()[0]
+            return tv_search_result_url
+        else:
+            None
 
     def get_search_result_url(self):
         if self.no_results_found():
-            return False
+            return None
 
         search_result_text = self.get_first_search_result_text()
         if not self.validate_search_result_text(search_result_text):
-            return False
+            return None
 
         print(f"-- Returning url: {self.get_first_tv_search_result_url()}")
         return self.get_first_tv_search_result_url()
