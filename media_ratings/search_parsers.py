@@ -1,11 +1,54 @@
-from tkinter import N
 from .parsers import Parser
 
 
 class SearchResultsParser(Parser):
+    """
+    Class used to extract search results for a given search engine.
+    Extends Parser.
+
+    It takes in 2 params:
+        search_query: a query to be submitted to search engines.
+        html_page: a string representing markup.
+    If html_page is provided it will skip using url altogether.
+
+    It forms a url by concatenating search_url_prefix, search_query and search_url_suffix
+    together and cleaning them up. Then it passes that url to the parent class, along with
+    a html_page markup string, if provided.
+
+    For class variables:
+        search_url_prefix   = "https://www.google.com/search?q="
+        search_query        = "python documentation"
+        search_url_suffix   = "&hl=en"
+
+    The url formed will be:
+        https://www.google.com/search?q=python+documentation&hl=en
+
+
+    Specify the html class atribute to use as locator for search results
+    by assinging a class name to search_result_elem_cls.
+
+    For a markup such as:
+    <html>
+        <body>
+            <div class="found-search-results">
+                <div class="search-result"></div>
+                <div class="search-result"></div>
+                <div class="search-result"></div>
+                <div class="search-result"></div>
+            </div>
+
+        </body>
+    </html>
+
+    The search_result_elem_cls should be:
+        search_result_elem_cls = "found-search-results"
+
+    """
     search_url_prefix = ""
     search_url_suffix = ""
     search_result_elem_cls = ""
+
+    should_validate_search_result_test = True
 
     no_results_text = ""
     no_results_cls = ""
@@ -17,17 +60,32 @@ class SearchResultsParser(Parser):
         super().__init__(self.url, html_page)
 
     def _clean_up_url(self, url):
+        """
+        Returns a clean url string.
+        Url before cleaning: https://www.imdb.com/title/love death and-robots/
+        Url after cleaning: https://www.imdb.com/title/love+death+and+robots/
+        """
         print(f"-- Cleaning url: {url}...")
         return url.strip().replace(" ", "+").replace("-", "+")
 
-    def validate_search_result_text(self, search_result_text):
-        search_query_words = self.search_query.split(" ")
-        all_words_present_on_text = True
+    def _validate_search_result_text(self, search_result_text):
+        """
+        Compares the text of a search result against the words provided on
+        the search_query. If the words provided on the search query are not
+        found on the search result text it returns False, otherwise it returns True.
 
-        for word in search_query_words:
-            if not word in search_result_text:
-                all_words_present_on_text = False
-        return all_words_present_on_text
+        Only does the check if should_validate_search_result_test is set to True,
+        otherwise it skips and returns True.
+        """
+        if self.should_validate_search_result_test:
+            search_query_words = self.search_query.split(" ")
+            all_words_present_on_text = True
+
+            for word in search_query_words:
+                if not word in search_result_text:
+                    all_words_present_on_text = False
+            return all_words_present_on_text
+        return True
 
     def get_search_results(self):
         """Returns an array of search result elements."""
@@ -56,11 +114,23 @@ class SearchResultsParser(Parser):
         else:
             return None
 
+    def get_search_result_url(self):
+        if self.no_results_found():
+            return None
+
+        search_result_text = self.get_first_search_result_text()
+
+        if not self._validate_search_result_text(search_result_text):
+            return None
+        return self.get_first_search_result_url()
+
     def no_results_found(self):
+        """Returns True if get_search_results returns an empty list, False otherwise."""
         return True if len(self.get_search_results()) == 0 else False
 
 
 class IMDBSearchResultsParser(SearchResultsParser):
+    """Class used to extract results elements, urls and text from IMDb search."""
     search_url_prefix = "https://www.imdb.com/search/title/?title="
     search_url_suffix = "&languages=en"
     search_result_elem_cls = "lister-item-header"
@@ -68,41 +138,14 @@ class IMDBSearchResultsParser(SearchResultsParser):
     no_results_text = "No results found for"
     no_results_cls = "findHeader"
 
-    def get_search_results(self):
-        return self.soup.find_all(class_=self.search_result_elem_cls)
-
-    def get_search_urls(self):
-        return [url.find('a')['href'] for url in self.get_search_results()]
-
-    def get_first_search_result_text(self):
-        search_result_urls = self.get_search_urls()
-        if search_result_urls:
-            first_search_result_text = self.get_search_results()[
-                0].find('a').text.strip()
-            return first_search_result_text
-        else:
-            return None
-
     def get_first_search_result_url(self):
-        search_result_urls = self.get_search_urls()
-        if search_result_urls:
-            search_result_url = f"https://www.imdb.com{self.get_search_urls()[0]}"
+        """Returns the complete imdb url for the first search result."""
+        super_search_result_url = super().get_first_search_result_url()
+        if super_search_result_url:
+            search_result_url = f"https://www.imdb.com{super_search_result_url}"
             return search_result_url
         else:
-            return None
-
-    def get_search_result_url(self):
-        if self.no_results_found():
-            return None
-
-        search_result_text = self.get_first_search_result_text()
-
-        # if not self.validate_search_result_text(search_result_text):
-        #     return None
-        return self.get_first_search_result_url()
-
-    def no_results_found(self):
-        return True if len(self.get_search_results()) == 0 else False
+            None
 
 
 class RottentomatoesSearchResultsParser(SearchResultsParser):
@@ -157,7 +200,7 @@ class RottentomatoesSearchResultsParser(SearchResultsParser):
             return None
 
         search_result_text = self.get_first_search_result_text()
-        if not self.validate_search_result_text(search_result_text):
+        if not self._validate_search_result_text(search_result_text):
             return None
 
         print(f"-- Returning url: {self.get_first_tv_search_result_url()}")
