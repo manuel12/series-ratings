@@ -26,7 +26,7 @@ class IMDBSearchParserTests(TestCase):
     def test_validate_search_result_text_returns_true_when_all_words_present_in_text(self):
         search_result_text = self.search_parser.get_first_search_result_text()
         self.assertTrue(
-            self.search_parser.validate_search_result_text(search_result_text))
+            self.search_parser._validate_search_result_text(search_result_text))
 
     def test_get_search_results_returns_result_set(self):
         search_results = self.search_parser.get_search_results()
