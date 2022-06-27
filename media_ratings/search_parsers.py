@@ -48,7 +48,7 @@ class SearchResultsParser(Parser):
     search_url_suffix = ""
     search_result_elem_cls = ""
 
-    should_validate_search_result_test = True
+    should_validate_search_result = False
 
     no_results_text = ""
     no_results_cls = ""
@@ -67,25 +67,6 @@ class SearchResultsParser(Parser):
         """
         print(f"-- Cleaning url: {url}...")
         return url.strip().replace(" ", "+").replace("-", "+")
-
-    def _validate_search_result_text(self, search_result_text):
-        """
-        Compares the text of a search result against the words provided on
-        the search_query. If the words provided on the search query are not
-        found on the search result text it returns False, otherwise it returns True.
-
-        Only does the check if should_validate_search_result_test is set to True,
-        otherwise it skips and returns True.
-        """
-        if self.should_validate_search_result_test:
-            search_query_words = self.search_query.split(" ")
-            all_words_present_on_text = True
-
-            for word in search_query_words:
-                if not word in search_result_text:
-                    all_words_present_on_text = False
-            return all_words_present_on_text
-        return True
 
     def get_search_results(self):
         """Returns an array of search result elements."""
@@ -115,13 +96,10 @@ class SearchResultsParser(Parser):
             return None
 
     def get_search_result_url(self):
+        """Returns the href from the first search result, None if not found."""
         if self.no_results_found():
             return None
 
-        search_result_text = self.get_first_search_result_text()
-
-        if not self._validate_search_result_text(search_result_text):
-            return None
         return self.get_first_search_result_url()
 
     def no_results_found(self):
@@ -149,6 +127,8 @@ class IMDBSearchResultsParser(SearchResultsParser):
 
 
 class RottentomatoesSearchResultsParser(SearchResultsParser):
+    """Class used to extract results elements, urls and text from Rottentomatoes search."""
+    
     search_url_prefix = "https://www.rottentomatoes.com/search?search="
     search_result_elem_cls = "search-page-media-row"
 
@@ -156,6 +136,10 @@ class RottentomatoesSearchResultsParser(SearchResultsParser):
     no_results_cls = "js-search-no-results-title search__no-results-header"
 
     def get_tv_search_results_section(self):
+        """
+        Returns the element that contains all the search results of the TV section
+        as opposed to the movies and actors setion.
+        """
         try:
             page_result_section = self.soup.find_all("search-page-result")[1]
             if page_result_section.find('h2').get_text() == "TV shows":
@@ -168,43 +152,44 @@ class RottentomatoesSearchResultsParser(SearchResultsParser):
         except IndexError:
             return self.soup.find_all("search-page-result")[1]
 
-    def get_tv_search_results(self):
+    def get_search_results(self):
+        """Returns an array of search result elements."""
         tv_search_results_section = self.get_tv_search_results_section()
-        tv_search_results = tv_search_results_section.find_all(
+        search_results = tv_search_results_section.find_all(
             self.search_result_elem_cls)
-        return tv_search_results
+        return search_results
 
-    def get_tv_search_results_urls(self):
-        tv_search_results = self.get_tv_search_results()
-        return [tv_url.find('a')['href'] for tv_url in tv_search_results]
+    def get_search_results_urls(self):
+        """Returns an array of href's from search results."""
+        search_results = self.get_search_results()
+        return [url.find('a')['href'] for url in search_results]
 
     def get_first_search_result_text(self):
-        tv_search_result_urls = self.get_tv_search_results_urls()
-        if tv_search_result_urls:
-            first_search_result_text = self.get_tv_search_results()[0].find_all('a')[
+        """Returns the text for the first search result."""
+        search_result_urls = self.get_search_results_urls()
+        if search_result_urls:
+            first_search_result_text = self.get_search_results()[0].find_all('a')[
                 1].text.strip()
             return first_search_result_text
         else:
             return None
 
-    def get_first_tv_search_result_url(self):
-        tv_search_result_urls = self.get_tv_search_results_urls()
-        if tv_search_result_urls:
-            tv_search_result_url = self.get_tv_search_results_urls()[0]
-            return tv_search_result_url
+    def get_first_search_result_url(self):
+        """Returns the complete url for the first search result."""
+        search_result_urls = self.get_search_results_urls()
+        if search_result_urls:
+            search_result_url = self.get_search_results_urls()[0]
+            return search_result_url
         else:
             None
 
     def get_search_result_url(self):
+        """Returns the href from the first search result, None if not found."""
         if self.no_results_found():
             return None
 
-        search_result_text = self.get_first_search_result_text()
-        if not self._validate_search_result_text(search_result_text):
-            return None
-
-        print(f"-- Returning url: {self.get_first_tv_search_result_url()}")
-        return self.get_first_tv_search_result_url()
+        return self.get_first_search_result_url()
 
     def no_results_found(self):
-        return True if len(self.get_tv_search_results()) == 0 else False
+        """Returns True if get_search_results returns an empty list, False otherwise."""
+        return True if len(self.get_search_results()) == 0 else False
