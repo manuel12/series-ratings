@@ -36,7 +36,7 @@ class SearchResultsParserTests(TestCase):
 
         self.search_parser = SearchResultsParser(search_term, html_page)
 
-    def test_url_is_formed_correctly(self):
+    # def test_url_is_formed_correctly(self):
         self.assertEqual(self.search_parser.url,
                          "https://duckduckgo.com/?q=Breaking+Bad&t=h_&ia=web")
 
@@ -45,19 +45,6 @@ class SearchResultsParserTests(TestCase):
         search_parser = SearchResultsParser(search_term)
         self.assertEqual(search_parser.url,
                          "https://duckduckgo.com/?q=Bla+bla+bla+la+da+dee+da+do&t=h_&ia=web")
-
-    def test_validate_search_result_text_returns_true_when_all_words_present_in_text(self):
-        search_result_text = self.search_parser.get_first_search_result_text()
-        self.assertTrue(
-            self.search_parser.validate_search_result_text(search_result_text))
-
-    def test_validate_search_result_text_returns_false_when_words_missing_in_text(self):
-        search_term = "Breaking Anatomy"
-        search_parser = SearchResultsParser(search_term, html_page)
-
-        search_result_text = search_parser.get_first_search_result_text()
-        self.assertFalse(
-            search_parser.validate_search_result_text(search_result_text))
 
     def test_get_search_results_returns_result_set(self):
         search_results = self.search_parser.get_search_results()
