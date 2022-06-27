@@ -108,6 +108,8 @@ class IMDbMediaPageParser(Parser):
 
     Extends Parser.
     """
+
+    # imdb score element.
     elem_class_1 = {
         "tag": "div",
         "class": "sc-7ab21ed2-2 kYEdvH"
@@ -131,7 +133,8 @@ class IMDbMediaPageParser(Parser):
 
     def get_score_value(self):
         """Returns the clean IMDb score value or None if not found."""
-        score_value = self.get_value_2()
+        score_value = self.get_value_1()
+        print(f"score_value: {score_value}")
         if score_value:
             clean_score_value = self._clean_up_parsed_value(score_value)
             return clean_score_value
@@ -146,11 +149,14 @@ class RottentomatoesMediaPageParser(Parser):
 
     Extends Parser.
     """
+
+    # tomatometer score element.
     elem_class_1 = {
         "tag": None,
         "class": "#tomato_meter_link > span > span.mop-ratings-wrap__percentage"
     }
 
+    # audience score element.
     elem_class_2 = {
         "tag": None,
         "class": "div.mop-ratings-wrap__half.audience-score > h2 > a > span > span.mop-ratings-wrap__percentage"
