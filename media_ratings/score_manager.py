@@ -70,14 +70,13 @@ class ScoreManager():
 
                 # Fetch imdb score.
                 imdb_score_value = self.fetch_score("imdb")
+                print(f"imdb_score_value: {imdb_score_value}")
 
                 if imdb_score_value:
                     # Create imdb model instance.
                     new_imdb_score_model = self.create_score_model_instance(
                         "imdb", imdb_score_value)
 
-                    # Save imdb model instance to db.
-                    self.save_model_instance(new_imdb_score_model)
                 self.score_data["imdb"] = f"{imdb_score_value}/10" if imdb_score_value else 'N/A'
 
             if "N/A" in (self.rt_tomatometer, self.rt_audience_score):
