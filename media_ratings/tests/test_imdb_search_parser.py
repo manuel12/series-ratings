@@ -23,11 +23,6 @@ class IMDBSearchParserTests(TestCase):
         self.assertEqual(search_parser.url,
                          "https://www.imdb.com/search/title/?title=Bla+bla+bla+la+da+dee+da+do&languages=en")
 
-    def test_validate_search_result_text_returns_true_when_all_words_present_in_text(self):
-        search_result_text = self.search_parser.get_first_search_result_text()
-        self.assertTrue(
-            self.search_parser._validate_search_result_text(search_result_text))
-
     def test_get_search_results_returns_result_set(self):
         search_results = self.search_parser.get_search_results()
 
@@ -109,3 +104,4 @@ class IMDBSearchParserTests(TestCase):
 
     def test_no_results_found_returns_false_when_search_results_are_found(self):
         self.assertFalse(self.search_parser.no_results_found())
+
