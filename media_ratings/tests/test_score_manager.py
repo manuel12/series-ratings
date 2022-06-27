@@ -16,7 +16,7 @@ class ScoreManagerTests(TestCase):
         score_data = self.score_manager.get_score_data()
         self.assertEqual(score_data["imdb"], "8.9/10")
         self.assertEqual(score_data["rt"]["tomatometer"], "78%")
-        self.assertEqual(score_data["rt"]["audience_score"], "75%")
+        self.assertEqual(score_data["rt"]["audience_score"], "74%")
 
     def test_get_score_data_returns_na_when_imdb_score_not_found(self):
         search_term = "Non Existing Movie"
@@ -44,7 +44,7 @@ class ScoreManagerTests(TestCase):
     def test_fetch_score_with_rt_data(self):
         rt_scores = self.score_manager.fetch_score("rt")
         self.assertEqual(rt_scores["tomatometer"], 78)
-        self.assertEqual(rt_scores["audience_score"], 75)
+        self.assertEqual(rt_scores["audience_score"], 74)
 
     def test_fetch_score_returns_none_when_rt_score_not_found(self):
         search_term = "Non Existing Movie"
