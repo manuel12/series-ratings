@@ -1,12 +1,7 @@
 /// <reference types="cypress" />
 
 let testData = require("../../fixtures/test-data.json");
-const series = testData.map((serie) => serie.title);
-const testContexts = [
-  "Scoreboard - Search results tests",
-  "Scoreboard - Using intercept tests",
-  "Scoreboard - Loading icons test",
-];
+let series = testData.map((serie) => serie.title);
 
 const nonExistantSeries = [
   "Buffy of Thrones",
@@ -46,57 +41,68 @@ const testAllScoreValues = (imdbScore, tomatometerScore, audienceScore) => {
     .and("contain.text", audienceScore);
 };
 
-for (const testContext of testContexts) {
+describe("Scoreboard - Search results tests", () => {
   for (const serie in series) {
     const currentTestData = testData[serie];
 
-    if (testContext === "Scoreboard - Loading icons test") {
-      describe(testContext, () => {
-        before(() => {
-          cy.intercept("http://localhost:8000/fetch-score-data/*", {});
-          cy.visit("/");
-          cy.get("#id_search").type(serie);
-          cy.get("[data-test=search-button]").should("be.visible").click();
-        });
+    it(`should display current serie Title, IMDb and Rottentoes data for serie: ${series[serie]}`, () => {
+      cy.visit("/");
+      cy.get("#id_search").type(currentTestData.title);
+      cy.get("[data-test=search-button]").should("be.visible").click();
+      cy.get("[data-test=media-title]")
+        .should("be.visible")
+        .and("contain.text", currentTestData.title);
 
-        it("should show loading icons before data is fetched", () => {
-          cy.get("#imdb-score > .spinner-border").should("be.visible");
-          cy.get("#tomatometer-value > .spinner-border").should("be.visible");
-          cy.get("#audience_score-value > .spinner-border").should(
-            "be.visible"
-          );
-        });
-      });
-    } else {
-      describe(`${testContext} for ${currentTestData.title}`, () => {
-        beforeEach(() => {
-          cy.visit("/");
-          cy.get("#id_search").type(currentTestData.title);
-          cy.get("[data-test=search-button]").should("be.visible").click();
-        });
-
-        it("should display current serie Title, IMDb and Rottentoes data", () => {
-          console.log(currentTestData);
-          cy.get("[data-test=media-title]")
-            .should("be.visible")
-            .and("contain.text", currentTestData.title);
-
-          testAllScoreValues(
-            currentTestData.imdb,
-            currentTestData.rt.tomatometer,
-            currentTestData.rt.audience_score
-          );
-        });
-      });
-    }
+      testAllScoreValues(
+        currentTestData.imdb,
+        currentTestData.rt.tomatometer,
+        currentTestData.rt.audience_score
+      );
+    });
   }
-}
+});
 
-for (const serie in series) {
-  const currentTestData = testData[serie];
+describe("Scoreboard - Using intercept tests", () => {
+  for (const serie in series) {
+    const currentTestData = testData[serie];
 
-  describe("Scoreboard - Parcial data tests", () => {
-    it("should display N/A for imdb score data and rottentomatoes data", () => {
+    it(`should display current serie Title, IMDb and Rottentoes data for serie: ${series[serie]}`, () => {
+      cy.visit("/");
+      cy.get("#id_search").type(currentTestData.title);
+      cy.get("[data-test=search-button]").should("be.visible").click();
+
+      cy.get("[data-test=media-title]")
+        .should("be.visible")
+        .and("contain.text", currentTestData.title);
+
+      testAllScoreValues(
+        currentTestData.imdb,
+        currentTestData.rt.tomatometer,
+        currentTestData.rt.audience_score
+      );
+    });
+  }
+});
+
+describe("Scoreboard - Loading icons test", () => {
+  for (const serie in series) {
+    it(`should show loading icons before data is fetched for serie: ${series[serie]}`, () => {
+      cy.intercept("http://localhost:8000/fetch-score-data/*", {});
+      cy.visit("/");
+      cy.get("#id_search").type(serie);
+      cy.get("[data-test=search-button]").should("be.visible").click();
+      cy.get("#imdb-score > .spinner-border").should("be.visible");
+      cy.get("#tomatometer-value > .spinner-border").should("be.visible");
+      cy.get("#audience_score-value > .spinner-border").should("be.visible");
+    });
+  }
+});
+
+describe("Scoreboard - Parcial data tests", () => {
+  for (const serie in series) {
+    const currentTestData = testData[serie];
+
+    it(`should display N/A for imdb score data and rottentomatoes data for serie: ${series[serie]}`, () => {
       const currentTestDataNoIMDB = Object.assign({}, currentTestData);
       currentTestDataNoIMDB["imdb"] = "N/A";
 
@@ -114,7 +120,8 @@ for (const serie in series) {
         currentTestDataNoIMDB.rt.audience_score
       );
     });
-    it("should display score data for imdb score data and N/A for rottentomatoes data", () => {
+
+    it(`should display score data for imdb score data and N/A for rottentomatoes data for serie: ${series[serie]}`, () => {
       const currentTestDataNoRT = Object.assign({}, currentTestData);
       currentTestDataNoRT["rt"]["tomatometer"] = "N/A";
       currentTestDataNoRT["rt"]["audience_score"] = "N/A";
@@ -133,23 +140,20 @@ for (const serie in series) {
 
       testAllScoreValues(currentTestDataNoRT.imdb, "N/A", "N/A");
     });
-  });
-}
+  }
+});
 
-for (const serie of nonExistantSeries) {
-  describe(`Scoreboard - Non-existing series: (${serie}) tests`, () => {
-    beforeEach(() => {
+describe(`Scoreboard - Non-existing series tests`, () => {
+  for (const serie of nonExistantSeries) {
+    it(`Should display series (${serie}) Title and N/A IMDb and Rottentoes data`, () => {
       cy.visit("/");
       cy.get("#id_search").type(serie);
       cy.get("[data-test=search-button]").should("be.visible").click();
-    });
-
-    it("Should display series Title and N/A IMDb and Rottentoes data", () => {
       // cy.get("[data-test=media-title]")
       //   .should("be.visible")
       //   .and("contain.text", serie);
 
       testAllScoreValues("N/A", "N/A", "N/A");
     });
-  });
-}
+  }
+});
