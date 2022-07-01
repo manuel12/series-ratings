@@ -22,31 +22,11 @@
       src="{% static 'js/charts.min.js' %}"
     ></script>
     <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
-
-    <style>
-      .header {
-        margin: 150px auto 100px auto;
-      }
-      h1::before {
-        display: inline-block;
-        content: "\f008";
-        font-family: "Font Awesome 5 Free";
-        font-weight: 900;
-        color: yellow;
-        padding-right: 5px;
-        font-size: 75px;
-      }
-      h1 {
-        display: block;
-        text-decoration: underline;
-        text-decoration-thickness: 3px;
-      }
-      @media only screen and (max-width: 652px) {
-        h1::before {
-          display: block;
-        }
-      }
-    </style>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'media_ratings/style.css' %}"
+    />
   </head>
 
   <body class="bg-dark">
