@@ -52,3 +52,43 @@ const createLineChart = (data, canvasId) => {
     },
   });
 };
+
+// results.html js
+const mockData = {
+  title: "Stranger Things",
+  episodes: [
+    {
+      episodeNumber: "1",
+      imDbRating: "8.6",
+    },
+    {
+      episodeNumber: "2",
+      imDbRating: "8.5",
+    },
+    {
+      episodeNumber: "3",
+      imDbRating: "8.9",
+    },
+    {
+      episodeNumber: "4",
+      imDbRating: "9.0",
+    },
+    {
+      episodeNumber: "5",
+      imDbRating: "8.8",
+    },
+    {
+      episodeNumber: "6",
+      imDbRating: "8.9",
+    },
+    {
+      episodeNumber: "7",
+      imDbRating: "9.1",
+    },
+    {
+      episodeNumber: "8",
+      imDbRating: "9.4",
+    },
+  ],
+};
+createLineChart(mockData, "ratings-line-chart");
