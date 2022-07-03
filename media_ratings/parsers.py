@@ -6,6 +6,8 @@ import validators
 class Parser:
     """
     Class used to extract elements and values from a html markup.
+    
+    Should not be used directly but extended instead.
 
     It takes in 2 params:
         url: a valid url.
@@ -29,13 +31,13 @@ class Parser:
     </html>
 
     The dict for elem_class_1 should be as follows:
-    {
+    elem_class_1 = {
         "tag": "div",
         "class": "element-1"
     }
 
     And the dict for elem_class_2 should be as follows:
-    {
+    elem_class_2 = {
         "tag": "span",
         "class": "element-2"
     }
@@ -68,7 +70,7 @@ class Parser:
         """Return element from locators specified on elem_class_1 or None if not found."""
         if not self.elem_class_1:
             raise AttributeError(
-                "You need to assign a value to elem_class_1 in order to call this function")
+                "You need to assign a dict with tag and class values to elem_class_1 in order to call this function")
         try:
             return self.soup.find(self.elem_class_1["tag"],
                                   class_=self.elem_class_1["class"])
@@ -86,7 +88,7 @@ class Parser:
         """Return element from locators specified on elem_class_2 or None if not found."""
         if not self.elem_class_2:
             raise AttributeError(
-                "You need to assign a value to elem_class_2 in order to call this function")
+                "You need to assign a dict with tag and class values to elem_class_2 in order to call this function")
         try:
             return self.soup.find(self.elem_class_2["tag"],
                                   class_=self.elem_class_2["class"])
@@ -134,7 +136,6 @@ class IMDbMediaPageParser(Parser):
     def get_score_value(self):
         """Returns the clean IMDb score value or None if not found."""
         score_value = self.get_value_1()
-        print(f"score_value: {score_value}")
         if score_value:
             clean_score_value = self._clean_up_parsed_value(score_value)
             return clean_score_value
