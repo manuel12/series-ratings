@@ -3,8 +3,10 @@ from .parsers import Parser
 
 class SearchResultsParser(Parser):
     """
-    Class used to extract search results for a given search engine.
+    Class used to extract search results from a given search engine.
     Extends Parser.
+
+    Should not be used directly but extended instead.
 
     It takes in 2 params:
         search_query: a query to be submitted to search engines.
@@ -50,11 +52,10 @@ class SearchResultsParser(Parser):
 
     should_validate_search_result = False
 
-    no_results_text = ""
-    no_results_cls = ""
-
     def __init__(self, search_query, html_page=""):
         self.search_query = search_query
+        if not self.search_query:
+            raise ValueError("You need to assign a value to search_query!")
         self.url = self.search_url_prefix + self.search_query + self.search_url_suffix
         self.url = self._clean_up_url(self.url)
         super().__init__(self.url, html_page)
@@ -113,9 +114,6 @@ class IMDBSearchResultsParser(SearchResultsParser):
     search_url_suffix = "&languages=en"
     search_result_elem_cls = "lister-item-header"
 
-    no_results_text = "No results found for"
-    no_results_cls = "findHeader"
-
     def get_first_search_result_url(self):
         """Returns the complete imdb url for the first search result."""
         super_search_result_url = super().get_first_search_result_url()
@@ -128,12 +126,12 @@ class IMDBSearchResultsParser(SearchResultsParser):
 
 class RottentomatoesSearchResultsParser(SearchResultsParser):
     """Class used to extract results elements, urls and text from Rottentomatoes search."""
-    
+
     search_url_prefix = "https://www.rottentomatoes.com/search?search="
     search_result_elem_cls = "search-page-media-row"
 
-    no_results_text = "Sorry, no results found for"
-    no_results_cls = "js-search-no-results-title search__no-results-header"
+    def _get_search_results_sections(self):
+        return self.soup.find_all("search-page-result")
 
     def get_tv_search_results_section(self):
         """
@@ -141,16 +139,12 @@ class RottentomatoesSearchResultsParser(SearchResultsParser):
         as opposed to the movies and actors setion.
         """
         try:
-            page_result_section = self.soup.find_all("search-page-result")[1]
-            if page_result_section.find('h2').get_text() == "TV shows":
-                return page_result_section
-            else:
-                page_result_section = self.soup.find_all(
-                    "search-page-result")[2]
-                if page_result_section.find('h2').get_text() == "TV shows":
-                    return page_result_section
+            page_sections = self.soup.find_all("search-page-result")
+            for section in page_sections:
+                if 'type="tv"' in str(section):
+                    return section
         except IndexError:
-            return self.soup.find_all("search-page-result")[1]
+            return self.soup.find_all("search-page-result")[0]
 
     def get_search_results(self):
         """Returns an array of search result elements."""
@@ -159,37 +153,12 @@ class RottentomatoesSearchResultsParser(SearchResultsParser):
             self.search_result_elem_cls)
         return search_results
 
-    def get_search_results_urls(self):
-        """Returns an array of href's from search results."""
-        search_results = self.get_search_results()
-        return [url.find('a')['href'] for url in search_results]
-
     def get_first_search_result_text(self):
         """Returns the text for the first search result."""
-        search_result_urls = self.get_search_results_urls()
+        search_result_urls = self.get_search_urls()
         if search_result_urls:
             first_search_result_text = self.get_search_results()[0].find_all('a')[
                 1].text.strip()
             return first_search_result_text
         else:
             return None
-
-    def get_first_search_result_url(self):
-        """Returns the complete url for the first search result."""
-        search_result_urls = self.get_search_results_urls()
-        if search_result_urls:
-            search_result_url = self.get_search_results_urls()[0]
-            return search_result_url
-        else:
-            None
-
-    def get_search_result_url(self):
-        """Returns the href from the first search result, None if not found."""
-        if self.no_results_found():
-            return None
-
-        return self.get_first_search_result_url()
-
-    def no_results_found(self):
-        """Returns True if get_search_results returns an empty list, False otherwise."""
-        return True if len(self.get_search_results()) == 0 else False
