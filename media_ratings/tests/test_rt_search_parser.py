@@ -24,7 +24,7 @@ class RTSearchParserTests(TestCase):
 
     def test_get_tv_search_result_section_returns_element(self):
         search_result_section = self.search_parser.get_tv_search_results_section()
-        self.assertIn("search-page-media-row", str(search_result_section))
+        self.assertIn('type="tv"', str(search_result_section))
 
     def test_get_search_results_returns_result_set(self):
         search_results = self.search_parser.get_search_results()
@@ -47,17 +47,17 @@ class RTSearchParserTests(TestCase):
         self.assertEqual(search_results, [])
 
     def test_get_tv_search_urls_returns_urls(self):
-        search_result_urls = self.search_parser.get_search_results_urls()
+        search_result_urls = self.search_parser.get_search_urls()
         for url in search_result_urls:
             self.assertTrue(validators.url(url))
 
     def test_get_tv_search_urls_returns_none_when_no_elements_found(self):
-        search_result_urls = self.search_parser.get_search_results_urls()
+        search_result_urls = self.search_parser.get_search_urls()
         for url in search_result_urls:
             self.assertTrue(validators.url(url))
 
     def test_get_first_search_result_url(self):
-        search_result_urls = self.search_parser.get_search_results_urls()
+        search_result_urls = self.search_parser.get_search_urls()
         first_search_result_url = self.search_parser.get_first_search_result_url()
 
         self.assertEqual(first_search_result_url, search_result_urls[0])
