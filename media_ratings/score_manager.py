@@ -65,54 +65,43 @@ class ScoreManager():
         else:
             # Fetch each piece of the missing score data.
             if "N/A" in self.imdb_score:
-                imdb_score_value = None
                 print(f"-- Fetching score data for imdb")
 
                 # Fetch imdb score.
-                imdb_score_value = self.fetch_score("imdb")
+                imdb_score_value = self.fetch_score(
+                    "imdb", IMDBSearchResultsParser, IMDbMediaPageParser)
                 print(f"imdb_score_value: {imdb_score_value}")
 
-                if imdb_score_value:
-                    # Create imdb model instance.
-                    new_imdb_score_model = self.create_score_model_instance(
-                        "imdb", imdb_score_value)
+                # Create imdb model instance.
+                new_imdb_score_model = self.create_score_model_instance(
+                    IMDbScores,
+                    media=self.tv_series,
+                    imdb_score=imdb_score_value)
 
-                self.score_data["imdb"] = f"{imdb_score_value}/10" if imdb_score_value else 'N/A'
+                imdb_score = new_imdb_score_model.get_formatted_scores()[
+                    "imdb_score"]
+                self.score_data["imdb"] = imdb_score
 
             if "N/A" in (self.rt_tomatometer, self.rt_audience_score):
-                tomatometer_score_value = None
-                audience_score_value = None
                 print(f"-- Fetching score data for rt")
 
                 # Fetch rt score.
-                rt_score_values = self.fetch_score("rt")
+                rt_score_values = self.fetch_score(
+                    "rt", RottentomatoesSearchResultsParser, RottentomatoesMediaPageParser)
 
-                if rt_score_values:
-                    # Create rt model instance.
-                    new_rt_score_model = self.create_score_model_instance("rt",
-                                                                          rt_score_values["tomatometer"],
-                                                                          rt_score_values["audience_score"])
-                    tomatometer_score_value = new_rt_score_model.tomatometer_score
-                    audience_score_value = new_rt_score_model.audience_score
+                # Create rt model instance.
+                new_rt_score_model = self.create_score_model_instance(
+                    RottentomatoesScores,
+                    media=self.tv_series,
+                    tomatometer_score=rt_score_values["tomatometer"],
+                    audience_score=rt_score_values["audience_score"])
 
-                self.score_data["rt"]["tomatometer"] = f"{tomatometer_score_value}%" if tomatometer_score_value else 'N/A'
-                self.score_data["rt"]["audience_score"] = f"{audience_score_value}%" if audience_score_value else 'N/A'
+                rt_score = new_rt_score_model.get_formatted_scores()
+                self.score_data["rt"] = rt_score
 
             return self.score_data
 
-    def fetch_score(self, agency):
-        if agency == "imdb":
-            return self.fetch_score_helper(agency,
-                                           IMDBSearchResultsParser,
-                                           IMDbMediaPageParser)
-        else:
-            return self.fetch_score_helper(agency,
-                                           RottentomatoesSearchResultsParser,
-                                           RottentomatoesMediaPageParser)
-
-    def fetch_score_helper(self, agency, search_result_parser, media_page_parser):
-        print(f"On fetch_score_helper for {self.search_term}")
-
+    def fetch_score(self, agency, search_result_parser, media_page_parser):
         search_parsers = search_result_parser(self.search_term)
         search_result_url = search_parsers.get_search_result_url()
         print(f"Search_result_url {search_result_url}")
@@ -130,18 +119,6 @@ class ScoreManager():
         else:
             return None
 
-    def create_score_model_instance(self, agency, score_value_one, score_value_two=None):
-        if agency == "imdb":
-            new_score = self.create_score_model_instance_helper(IMDbScores,
-                                                                media=self.tv_series,
-                                                                imdb_score=score_value_one)
-        else:
-            new_score = self.create_score_model_instance_helper(RottentomatoesScores,
-                                                                media=self.tv_series,
-                                                                tomatometer_score=score_value_one,
-                                                                audience_score=score_value_two)
-        print(f"-- Created new {agency} score...")
-        return new_score
-
-    def create_score_model_instance_helper(self, scores_model, *args, **kwargs):
-        return scores_model.objects.create(*args, **kwargs)
+    def create_score_model_instance(self, score_model, *args, **kwargs):
+        print(f"-- Created new {score_model.__class__.__name__} score...")
+        return score_model.objects.create(*args, **kwargs)
