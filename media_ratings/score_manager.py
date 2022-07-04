@@ -70,7 +70,6 @@ class ScoreManager():
                 # Fetch imdb score.
                 imdb_score_value = self.fetch_score(
                     "imdb", IMDBSearchResultsParser, IMDbMediaPageParser)
-                print(f"imdb_score_value: {imdb_score_value}")
 
                 # Create imdb model instance.
                 new_imdb_score_model = self.create_score_model_instance(
