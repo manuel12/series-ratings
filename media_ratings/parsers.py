@@ -6,7 +6,7 @@ import validators
 class Parser:
     """
     Class used to extract elements and values from a html markup.
-    
+
     Should not be used directly but extended instead.
 
     It takes in 2 params:
