@@ -8,7 +8,6 @@ class RTSearchParserTests(TestCase):
     def setUp(self):
         search_term = "Breaking Bad"
 
-        RottentomatoesSearchResultsParser.search_url_prefix = "https://www.rottentomatoes.com/search?search="
         RottentomatoesSearchResultsParser.search_result_elem_cls = "search-page-media-row"
         self.search_parser = RottentomatoesSearchResultsParser(search_term)
 
