@@ -7,10 +7,8 @@ from media_ratings.search_parsers import IMDBSearchResultsParser
 class IMDBSearchParserTests(TestCase):
     def setUp(self):
         search_term = "Breaking Bad"
-
-        IMDBSearchResultsParser.search_url_prefix = "https://www.imdb.com/search/title/?title="
-        IMDBSearchResultsParser.search_url_suffix = "&languages=en"
         IMDBSearchResultsParser.search_result_elem_cls = "lister-item-header"
+
         self.search_parser = IMDBSearchResultsParser(search_term)
 
     def test_url_is_formed_correctly(self):
@@ -39,7 +37,6 @@ class IMDBSearchParserTests(TestCase):
 
         search_parser = IMDBSearchResultsParser(search_term)
         search_results = search_parser.get_search_results()
-
         self.assertEqual(search_results.__class__.__name__, "ResultSet")
         self.assertEqual(search_results, [])
 
@@ -104,4 +101,3 @@ class IMDBSearchParserTests(TestCase):
 
     def test_no_results_found_returns_false_when_search_results_are_found(self):
         self.assertFalse(self.search_parser.no_results_found())
-
