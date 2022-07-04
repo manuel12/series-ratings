@@ -38,16 +38,5 @@ def fetch_score_data(request):
     search_term = request.GET.get("media")
 
     sc = ScoreManager(search_term)
-    try:
-        score_data = sc.get_score_data()
-        print(score_data)
-    except Exception as e:
-        print(f"On fetch_score_data - Error: {e}")
-        score_data = {
-            "rt": {
-                "tomatometer": "N/A",
-                "audience_score": "N/A"
-            },
-            "imdb": "N/A"
-        }
+    score_data = sc.get_score_data()
     return JsonResponse(score_data)
