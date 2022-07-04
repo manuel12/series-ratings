@@ -35,22 +35,26 @@ class ScoreManagerTests(TestCase):
         self.assertEqual(score_data["rt"]["audience_score"], "N/A")
 
     def test_fetch_score_with_imdb_data(self):
-        self.assertEqual(self.score_manager.fetch_score("imdb", IMDBSearchResultsParser, IMDbMediaPageParser), 8.9)
+        self.assertEqual(self.score_manager.fetch_score(
+            "imdb", IMDBSearchResultsParser, IMDbMediaPageParser), 8.9)
 
     def test_fetch_score_returns_none_when_imdb_score_not_found(self):
         search_term = "Non Existing Movie"
         score_manager = ScoreManager(search_term)
-        self.assertEqual(score_manager.fetch_score("imdb", IMDBSearchResultsParser, IMDbMediaPageParser), None)
+        self.assertEqual(score_manager.fetch_score(
+            "imdb", IMDBSearchResultsParser, IMDbMediaPageParser), None)
 
     def test_fetch_score_with_rt_data(self):
-        rt_scores = self.score_manager.fetch_score("rt", RottentomatoesSearchResultsParser, RottentomatoesMediaPageParser)
+        rt_scores = self.score_manager.fetch_score(
+            "rt", RottentomatoesSearchResultsParser, RottentomatoesMediaPageParser)
         self.assertEqual(rt_scores["tomatometer"], 78)
         self.assertEqual(rt_scores["audience_score"], 74)
 
     def test_fetch_score_returns_none_when_rt_score_not_found(self):
         search_term = "Non Existing Movie"
         score_manager = ScoreManager(search_term)
-        self.assertEqual(score_manager.fetch_score("rt", RottentomatoesSearchResultsParser, RottentomatoesMediaPageParser), None)
+        self.assertEqual(score_manager.fetch_score(
+            "rt", RottentomatoesSearchResultsParser, RottentomatoesMediaPageParser), None)
 
     def test_create_imdb_score_model_instance(self):
         imdb_score_value = 8.9
