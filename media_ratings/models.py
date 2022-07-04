@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 
+
 class Media(models.Model):
     """
     Base class for representing a media instance.
@@ -9,37 +10,32 @@ class Media(models.Model):
     Should not be used directly but extended instead.
     """
 
-    title = models.CharField(max_length=100, unique=True, blank=False, null=False)
+    title = models.CharField(
+        max_length=100, unique=True, blank=False, null=False)
     description = models.TextField(blank=True)
-
-    def imdb_scores(self):
-        imdb_score = None
-        imdb_score_instance = IMDbScores.objects.filter(media=self).first()
-        
-        if imdb_score_instance:
-              imdb_score = imdb_score_instance.imdb_score
-        return {
-            "imdb_score": f"{imdb_score}/10" if imdb_score else "N/A"
-        }
 
     class Meta:
         verbose_name_plural = "Medias"
 
-    def rottentomatoes_scores(self):
-        tomatometer_score = None
-        audience_score = None
-        rt_score_instance = RottentomatoesScores.objects.filter(media=self).first()
-
-        if rt_score_instance:
-            tomatometer_score = rt_score_instance.tomatometer_score
-            audience_score = rt_score_instance.audience_score
-        return {
-          "tomatometer": f"{tomatometer_score}%" if tomatometer_score else 'N/A',
-          "audience_score": f"{audience_score}%" if audience_score else 'N/A'
-        }
-
     def __str__(self):
         return self.title
+
+    def imdb_scores(self):
+        imdb_score_instance = IMDbScores.objects.filter(media=self).first()
+
+        if not imdb_score_instance:
+            imdb_score_instance = IMDbScores.objects.create(
+                media=self, imdb_score=None)
+        return imdb_score_instance.get_formatted_scores()
+
+    def rottentomatoes_scores(self):
+        rt_score_instance = RottentomatoesScores.objects.filter(
+            media=self).first()
+
+        if not rt_score_instance:
+            rt_score_instance = RottentomatoesScores.objects.create(
+                media=self, tomatometer_score=None, audience_score=None)
+        return rt_score_instance.get_formatted_scores()
 
 
 class TV_Series(Media):
@@ -54,7 +50,7 @@ class TV_Series(Media):
 class MediaScore(models.Model):
     """
     Base class for representing a media scores.
-    
+
     Should not be used directly but extended instead.
     """
 
@@ -88,6 +84,6 @@ class RottentomatoesScores(MediaScore):
 
     def get_formatted_scores(self):
         return {
-          "tomatometer": f"{self.tomatometer_score}%" if self.tomatometer_score else 'N/A',
-          "audience_score": f"{self.audience_score}%" if self.audience_score else 'N/A'
+            "tomatometer": f"{self.tomatometer_score}%" if self.tomatometer_score else 'N/A',
+            "audience_score": f"{self.audience_score}%" if self.audience_score else 'N/A'
         }
