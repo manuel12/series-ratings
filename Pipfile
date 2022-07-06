@@ -5,13 +5,7 @@ name = "pypi"
 
 [packages]
 django = "*"
-requests = "*"
-beautifulsoup4 = "*"
 bs4 = "*"
-selenium = "*"
-webdriver-manager = "*"
-scrapy = "*"
-google-search-results = "*"
 validators = "*"
 
 [dev-packages]
