@@ -1,10 +1,13 @@
 {
-  "name": "media rating - e2e",
+  "name": "e2e",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm install",
+    "test": "cypress run",
+    "test:headless": "cypress run --headless",
+    "test:open": "npx cypress open"
   },
   "author": "",
   "license": "ISC",
