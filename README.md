@@ -7,7 +7,9 @@
 ### Requesting a Serie's scores
 Write the series of your choosing in the search bar in order to have the application fetch it's IMDb score and Rottentomatoes tomatometer and audience scores.
 
-It shouldn't take more than 5 seconds to load the values.
+It shouldn't take more than 6 seconds to load the values the first time. The next time you search for the same series the app will show the score's inmediatly.
+
+![Display gif showing search query being submitted and app loading fetched scores](demo/submit-search.gif)
 
 ## Installation
    For installing the Django application clone the repository and run:
@@ -34,6 +36,13 @@ For installing Cypress run go to the e2e folder and run:
 
     npm install
 
+## Tests
+
+| Type | Location                                 |
+| ---- | ---------------------------------------- |
+| api  | [e2e/cypress/integration/api-tests](e2e/cypress/integration/api-tests) |
+| ui   | [e2e/cypress/integration/ui-tests](e2e/cypress/integration/ui-tests)   |
+| unit | [media_ratings/tests](media_ratings/tests)       |
 
 ## Running tests
 
@@ -57,10 +66,12 @@ For opening cypress client run:
 ## Uses
  - Django.
  - Bootstrap.
+ - Font Awesome icons.
  - Cypress.
-
+ - Cypress Image Snapshot.
 
 ## Features
+- Web Parsing.
 - UI tests.
 - Visual tests.
 - Unit tests.
