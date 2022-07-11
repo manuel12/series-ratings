@@ -2,6 +2,11 @@
 .header {
   margin: 150px auto 100px auto;
 }
+
+.footer {
+    height: 300px;;
+}
+
 h1::before {
   display: inline-block;
   content: "\f008";
@@ -16,7 +21,7 @@ h1 {
   text-decoration: underline;
   text-decoration-thickness: 3px;
 }
-@media only screen and (max-width: 652px) {
+@media only screen and (max-width: 1000px) {
   h1::before {
     display: block;
   }
@@ -117,7 +122,7 @@ h2 {
 .spinner-border {
   padding: 15px;
 }
-@media only screen and (max-width: 652px) {
+@media only screen and (max-width: 1000px) {
   [class*="col-sm-"] {
     width: 100%;
   }
@@ -155,12 +160,5 @@ h2 {
   #audience_score-value {
     width: 40%;
     margin: 0 30%;
-  }
-}
-
-/* search.html css */
-@media only screen and (max-width: 768px) {
-  [class*="col-"] {
-    width: 100%;
   }
 }
