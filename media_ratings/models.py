@@ -54,13 +54,13 @@ class MediaScore(models.Model):
     Should not be used directly but extended instead.
     """
 
-    media = models.ForeignKey(Media, on_delete=models.CASCADE)
+    media = models.ForeignKey(TV_Series, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{Media} scores"
+        return f"{TV_Series} scores"
 
     class Meta:
-        verbose_name_plural = "Media Scores"
+        verbose_name_plural = "TV_Series Scores"
 
 
 class IMDbScores(MediaScore):
@@ -68,6 +68,9 @@ class IMDbScores(MediaScore):
 
     class Meta:
         verbose_name_plural = "IMDb Scores"
+
+    def __str__(self):
+        return f"IMDbScore of ({self.imdb_score}/10) for media {self.media}"
 
     def get_formatted_scores(self):
         return {
@@ -81,6 +84,9 @@ class RottentomatoesScores(MediaScore):
 
     class Meta:
         verbose_name_plural = "Rottentomatoes Scores"
+
+    def __str__(self):
+        return f"RottentomatoesScore of tomatometer ({self.tomatometer_score}%) and audience score ({self.audience_score}%) for media {self.media}"
 
     def get_formatted_scores(self):
         return {
