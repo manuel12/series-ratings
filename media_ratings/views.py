@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .forms import SearchForm
 from .utils import capitalize_phrase, sanitize_phrase
-from .score_manager import ScoreManager
+from .score_fetcher import ScoreFetcher
 
 
 # Create your views here.
@@ -37,6 +37,6 @@ def scoreboard(request):
 def fetch_score_data(request):
     search_term = request.GET.get("media")
 
-    sc = ScoreManager(search_term)
-    score_data = sc.get_score_data()
+    score_fetcher = ScoreFetcher(search_term)
+    score_data = score_fetcher.get_score_data()
     return JsonResponse(score_data)
