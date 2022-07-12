@@ -30,13 +30,14 @@
   </head>
 
   <body class="bg-dark">
-    <div class="container">
+    <div class="container" data-test="container">
       <div class="header" data-test="header">
         <a href="{% url 'media_ratings:home' %}" class="text-decoration-none">
           <h1 class="text-light text-center display-1">Series Ratings</h1>
         </a>
       </div>
       {% block content %} {% endblock content %}
+      <div class="footer"></div>
     </div>
   </body>
 </html>
