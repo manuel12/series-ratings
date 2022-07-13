@@ -1,5 +1,7 @@
 {
     "baseUrl": "http://localhost:8000/",
-    "integrationFolder": "cypress/integration/ui-tests/",
-    "defaultCommandTimeout": 10000
+    "integrationFolder": "cypress/integration/",
+    "defaultCommandTimeout": 30000,
+    "viewportWidth": 1100,
+    "viewportHeight": 660
 }
