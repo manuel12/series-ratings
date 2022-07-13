@@ -4,10 +4,10 @@ let testData = require("../../fixtures/test-data.json");
 let series = testData.map((serie) => serie.title);
 
 const nonExistantSeries = [
-  "Buffy of Thrones",
-  "Breaking Anatomy",
-  "South Mirror",
-  "Stranger Zone",
+  "Return of Buffy of Thrones",
+  "Breaking Anatomy Bones",
+  "South Mirror Boys",
+  "Stranger Twilight Zone",
   "Better Call MacGyver",
 ];
 
