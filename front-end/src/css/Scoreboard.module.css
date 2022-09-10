@@ -1,0 +1,127 @@
+.scoreboard-container {
+  height: fit-content;
+  border-style: solid;
+  border-color: white;
+  border-width: 3px;
+  border-radius: 20px;
+  background-color: darkgrey;
+}
+
+.scoreboard-header {
+  text-align: center;
+  margin: 15px 0;
+}
+
+h2 {
+  width: 66%;
+  margin: 0 16.5%;
+  padding: 10px 0;
+  font-size: 3rem !important;
+  background-color: rgb(54, 54, 54);
+  border-radius: 30px;
+}
+
+.scoreboard-content {
+  display: flex;
+  margin: 25px 0;
+}
+
+.score-block {
+  display: inline-block;
+  height: fit-content;
+  margin: 15px 0;
+  padding: 15px 0;
+  text-align: center;
+  border-radius: 10px;
+  border-color: white;
+  border-width: 3px;
+  border-style: solid;
+}
+
+#imdb-block {
+  background-color: #f5c518;
+}
+
+#rottentomatoes-block {
+  background-color: #fa320a;
+}
+
+.score-block-content {
+  display: flex;
+}
+
+.score-block-unit {
+  width: 100%;
+  display: inline-block;
+}
+
+.score-block-unit-header {
+  font-size: 1.5rem !important;
+  height: 50px;
+  margin: 5px 0 15px 0;
+}
+
+.score-block-unit-score {
+  margin-top: 10px;
+  width: fit-content;
+  margin: 0 25%;
+  padding: 10px 20px 5px 20px;
+  font-weight: bold;
+  font-size: 1.6rem;
+  background-color: rgb(54, 54, 54);
+  border-radius: 15px;
+}
+
+#imdb-score {
+  font-size: 1.5rem;
+  width: 40%;
+  margin: 0 30%;
+}
+
+.spinner-border {
+  padding: 15px;
+}
+
+@media only screen and (max-width: 1000px) {
+  .col-sm-5 {
+    width: 100%;
+  }
+
+  h2 {
+    width: 100%;
+    margin: 0;
+  }
+
+  .scoreboard-content {
+    display: block;
+  }
+
+  .score-block {
+    width: 100% !important;
+    display: block;
+  }
+
+  .score-block-unit {
+    width: 100%;
+    display: block;
+  }
+
+  .score-block-content {
+    display: block;
+  }
+
+  #imdb-score {
+    width: 40%;
+    margin: 0 30%;
+  }
+
+  #tomatometer-value {
+    width: 40%;
+    margin: 0 30%;
+  }
+
+  #audience_score-value {
+    width: 40%;
+    margin: 0 30%;
+  }
+}
