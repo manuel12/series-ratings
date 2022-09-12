@@ -54,10 +54,13 @@ class ScoreFetcher():
             self.tv_series = TV_Series.objects.create(title=self.search_term)
             self.tv_series.save()
 
+        self.score_data["title"] = self.tv_series.title
+
         print(f"-- complete_data_available: {self.complete_data_available}")
 
     def get_score_data(self):
         print(f"-- Getting score data")
+        print(f"-- Title: {self.tv_series.title}")
 
         if self.complete_data_available:
             print(f"-- Returning score data")
@@ -119,10 +122,15 @@ class ScoreFetcher():
             return None
 
     def create_score_model_instance(self, score_model, *args, **kwargs):
-        existing_score_model = score_model.objects.filter(media=self.tv_series).first()
+        existing_score_model = score_model.objects.filter(
+            media=self.tv_series).first()
         if existing_score_model:
-            print(f"-- Score model already exists for tv_series: {self.tv_series}")
+            print(
+                f"-- Score model already exists for tv_series: {self.tv_series}")
             print(f"-- Deleting score model: {existing_score_model}")
             existing_score_model.delete()
         print(f"-- Created new {score_model.__class__.__name__} score...")
         return score_model.objects.create(*args, **kwargs)
+
+    def get_starndardized_search_term(self):
+        return self.search_term
