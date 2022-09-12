@@ -16,6 +16,7 @@ h1::before {
   padding-right: 5px;
   font-size: 75px;
 }
+
 h1 {
   display: block;
   text-decoration: underline;
