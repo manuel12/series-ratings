@@ -9,6 +9,10 @@ bs4 = "*"
 validators = "*"
 django-cors-headers = "*"
 djangorestframework = "*"
+dj-database-url = "*"
+dj-static = "*"
+static3 = "*"
+gunicorn = "*"
 
 [dev-packages]
 
