@@ -126,6 +126,8 @@ USE_L10N = True
 USE_TZ = True
 
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
@@ -133,11 +135,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'front-end', 'build', 'static'),
-    #os.path.join(BASE_DIR, 'static')
 )
-
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
-
 
 # Heroku settings
 if os.getcwd() == '/app':
@@ -151,8 +149,7 @@ if os.getcwd() == '/app':
     # Allow all host headers.
     ALLOWED_HOSTS = ['*']
     # Static asset configuration
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     STATIC_ROOT = 'staticfiles'
     STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, 'static'),
+        os.path.join(BASE_DIR, 'front-end', 'build', 'static'),
     )
