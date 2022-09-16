@@ -149,7 +149,7 @@ if os.getcwd() == '/app':
     # Allow all host headers.
     ALLOWED_HOSTS = ['*']
     # Static asset configuration
-    STATIC_ROOT = 'staticfiles'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_DIRS = (
         os.path.join(BASE_DIR, 'front-end', 'build', 'static'),
     )
