@@ -7,6 +7,8 @@ name = "pypi"
 django = "*"
 bs4 = "*"
 validators = "*"
+django-cors-headers = "*"
+djangorestframework = "*"
 
 [dev-packages]
 
