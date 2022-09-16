@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
-import dj_database_url
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -139,6 +138,8 @@ STATICFILES_DIRS = (
 
 # Heroku settings
 if os.getcwd() == '/app':
+    import dj_database_url
+    
     DATABASES = {
         'default': dj_database_url.config(default='postgres://localhost')
     }
@@ -148,8 +149,9 @@ if os.getcwd() == '/app':
 
     # Allow all host headers.
     ALLOWED_HOSTS = ['*']
+    
     # Static asset configuration
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATIC_ROOT = "staticfiles"
     STATICFILES_DIRS = (
         os.path.join(BASE_DIR, 'front-end', 'build', 'static'),
     )
