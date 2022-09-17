@@ -87,7 +87,7 @@ describe("Scoreboard - Using intercept tests", () => {
 describe("Scoreboard - Loading icons test", () => {
   for (const serie in series) {
     it(`should show loading icons before data is fetched for serie: ${series[serie]}`, () => {
-      cy.intercept("http://localhost:8000/api/*", {});
+      cy.intercept(`${Cypress.config("baseUrl")}api/*`, {});
       cy.visit("/");
       cy.get("#id_search").type(serie);
       cy.get("[data-test=search-button]").should("be.visible").click();
@@ -103,17 +103,18 @@ describe("Scoreboard - Parcial data tests", () => {
     const currentTestData = testData[serie];
 
     it(`should display N/A for imdb score data and rottentomatoes data for serie: ${series[serie]}`, () => {
+      cy.log(currentTestData)
       console.log(currentTestData);
       const currentTestDataNoIMDB = Object.assign({}, currentTestData);
       currentTestDataNoIMDB["imdb"] = "N/A";
       console.log(currentTestDataNoIMDB)
 
       cy.intercept(
-        "http://localhost:8000/api/*",
+        `${Cypress.config("baseUrl")}api/*`,
         currentTestDataNoIMDB
       );
       cy.visit("/");
-      cy.get("#id_search").type(serie);
+      cy.get("#id_search").type(currentTestData.title);
       cy.get("[data-test=search-button]").should("be.visible").click();
 
       testAllScoreValues(
@@ -129,11 +130,11 @@ describe("Scoreboard - Parcial data tests", () => {
       currentTestDataNoRT["rt"]["audience_score"] = "N/A";
 
       cy.intercept(
-        "http://localhost:8000/api/*",
+        `${Cypress.config("baseUrl")}api/*`,
         currentTestDataNoRT
       );
       cy.visit("/");
-      cy.get("#id_search").type(serie);
+      cy.get("#id_search").type(currentTestData.title);
       cy.get("[data-test=search-button]").should("be.visible").click();
 
       cy.get("[data-test=imdb-header]")

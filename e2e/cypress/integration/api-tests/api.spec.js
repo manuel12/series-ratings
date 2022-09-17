@@ -8,7 +8,7 @@ describe("Fetch Score Data API 'GET' request", () => {
       const searchTerm = serieTitle;
       cy.request({
         method: "GET",
-        url: `http://localhost:8000/api/?media=${searchTerm}`,
+        url: `${Cypress.config("baseUrl")}api/?media=${searchTerm}`,
         headers: {
           "Content-Type": "application/json",
         },
@@ -35,7 +35,7 @@ describe("Fetch Score Data API 'GET' request", () => {
     const searchTerm = "Non Existing Movie";
     cy.request({
       method: "GET",
-      url: `http://localhost:8000/api/?media=${searchTerm}`,
+      url: `${Cypress.config("baseUrl")}api/?media=${searchTerm}`,
       headers: {
         "Content-Type": "application/json",
       },
