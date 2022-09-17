@@ -63,11 +63,11 @@ For opening cypress client run:
 
     npm run test:open
 
-**Note**: 4 out of the 40 tests are currently failing. These tests belong to the 'Non-existing series tests', which should yield "N/A" when trying to fetch scores for such series. Instead the tests fetch scores from similarly named series.
-
 ## Uses
  - Django.
- - Bootstrap.
+ - DRF.
+ - React
+ - React-Bootstrap.
  - Font Awesome icons.
  - Cypress.
 
