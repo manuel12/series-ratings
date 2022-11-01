@@ -8,6 +8,8 @@ from media_ratings.search_parsers import IMDBSearchResultsParser, Rottentomatoes
 
 class ScoreFetcherTests(TestCase):
     def setUp(self):
+        print("ScoreFetcherTests")
+
         search_term = "True Detective"
 
         self.tv_series = TV_Series.objects.create(title="True Detective")
@@ -15,9 +17,16 @@ class ScoreFetcherTests(TestCase):
 
     def test_get_score_data(self):
         score_data = self.score_fetcher.get_score_data()
-        self.assertEqual(score_data["imdb"], "8.9/10")
-        self.assertEqual(score_data["rt"]["tomatometer"], "78%")
-        self.assertEqual(score_data["rt"]["audience_score"], "74%")
+        clean_imdb_score = float(score_data["imdb"].split("/")[0])
+        self.assertTrue(score_data["imdb"], 0 < clean_imdb_score < 10)
+
+        clean_tomatometer_score = int(
+            score_data["rt"]["tomatometer"].replace("%", ""))
+        self.assertTrue(0 < clean_tomatometer_score < 101)
+
+        clean_audience_score = int(
+            score_data["rt"]["audience_score"].replace("%", ""))
+        self.assertTrue(0 < clean_audience_score < 101)
 
     def test_get_score_data_returns_na_when_imdb_score_not_found(self):
         search_term = "Non Existing Movie"
@@ -35,8 +44,8 @@ class ScoreFetcherTests(TestCase):
         self.assertEqual(score_data["rt"]["audience_score"], "N/A")
 
     def test_fetch_score_with_imdb_data(self):
-        self.assertEqual(self.score_fetcher.fetch_score(
-            "imdb", IMDBSearchResultsParser, IMDbMediaPageParser), 8.9)
+        self.assertTrue(0 < self.score_fetcher.fetch_score(
+            "imdb", IMDBSearchResultsParser, IMDbMediaPageParser) < 10)
 
     def test_fetch_score_returns_none_when_imdb_score_not_found(self):
         search_term = "Non Existing Movie"
@@ -47,8 +56,8 @@ class ScoreFetcherTests(TestCase):
     def test_fetch_score_with_rt_data(self):
         rt_scores = self.score_fetcher.fetch_score(
             "rt", RottentomatoesSearchResultsParser, RottentomatoesMediaPageParser)
-        self.assertEqual(rt_scores["tomatometer"], 78)
-        self.assertEqual(rt_scores["audience_score"], 74)
+        self.assertTrue(0 < rt_scores["tomatometer"] < 101)
+        self.assertTrue(0 < rt_scores["audience_score"] < 101)
 
     def test_fetch_score_returns_none_when_rt_score_not_found(self):
         search_term = "Non Existing Movie"
