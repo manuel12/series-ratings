@@ -6,6 +6,8 @@ from media_ratings.search_parsers import RottentomatoesSearchResultsParser
 
 class RTSearchParserTests(TestCase):
     def setUp(self):
+        print("RTSearchParserTests")
+
         search_term = "Breaking Bad"
 
         RottentomatoesSearchResultsParser.search_result_elem_cls = "search-page-media-row"
