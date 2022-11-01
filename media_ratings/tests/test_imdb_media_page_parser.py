@@ -4,17 +4,20 @@ from media_ratings.parsers import IMDbMediaPageParser
 
 class IMDbMediaPageParserTests(TestCase):
     def setUp(self):
+        print("IMDbMediaPageParserTests")
+
         # love, death and robots
         self.imdb_url = "https://www.imdb.com/title/tt9561862/?ref_=adv_li_tt"
         self.parser = IMDbMediaPageParser(self.imdb_url)
 
     def test_clean_up_parsed_value(self):
         cleaned_up_value = self.parser._clean_up_parsed_value("9.7/10")
+        self.assertTrue(isinstance(cleaned_up_value, float))
         self.assertEqual(cleaned_up_value, 9.7)
 
     def test_get_score(self):
         score_value = self.parser.get_score_value()
-        self.assertEqual(score_value, 8.4)
+        self.assertTrue(0 < score_value < 10.1)
 
     def test_get_elem_1(self):
         self.parser.elem_class_1 = {"tag": "div",
