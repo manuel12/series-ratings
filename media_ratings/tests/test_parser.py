@@ -22,6 +22,8 @@ html_page = """
 
 class ParserTests(TestCase):
     def setUp(self):
+        print("ParserTests")
+
         self.parser = Parser(html_page=html_page)
 
     def test_url_cannot_be_empty(self):
