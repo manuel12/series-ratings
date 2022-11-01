@@ -6,6 +6,8 @@ from media_ratings.search_parsers import IMDBSearchResultsParser
 
 class IMDBSearchParserTests(TestCase):
     def setUp(self):
+        print("IMDBSearchParserTests"
+              )
         search_term = "Breaking Bad"
         IMDBSearchResultsParser.search_result_elem_cls = "lister-item-header"
 
