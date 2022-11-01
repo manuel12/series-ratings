@@ -1,4 +1,4 @@
-from this import d
+
 import validators
 
 from django.test import TestCase
@@ -29,6 +29,8 @@ html_page = """
 
 class SearchResultsParserTests(TestCase):
     def setUp(self):
+        print("SearchResultsParserTests")
+
         search_term = "Breaking Bad"
         SearchResultsParser.search_url_prefix = "https://duckduckgo.com/?q="
         SearchResultsParser.search_url_suffix = "&t=h_&ia=web"
