@@ -3,14 +3,6 @@
 let testData = require("../../fixtures/test-data.json");
 let series = testData.map((serie) => serie.title);
 
-const nonExistantSeries = [
-  // "Return of Buffy of Thrones",
-  // "Breaking Anatomy Bones Wire",
-  "North South Mirror Boys",
-  "Stranger True Twilight Zone",
-  "Better Call Breaking MacGyver",
-];
-
 const testAllScoreValues = (imdbScore, tomatometerScore, audienceScore) => {
   cy.get("[data-test=imdb-header]")
     .should("be.visible")
@@ -91,9 +83,15 @@ describe("Scoreboard - Loading icons test", () => {
       cy.visit("/");
       cy.get("#id_search").type(serie);
       cy.get("[data-test=search-button]").should("be.visible").click();
-      cy.get("[data-test=imdb-score-value] > .spinner-border").should("be.visible");
-      cy.get("[data-test=tomatometer-value] > .spinner-border").should("be.visible");
-      cy.get("[data-test=audience_score-value] > .spinner-border").should("be.visible");
+      cy.get("[data-test=imdb-score-value] > .spinner-border").should(
+        "be.visible"
+      );
+      cy.get("[data-test=tomatometer-value] > .spinner-border").should(
+        "be.visible"
+      );
+      cy.get("[data-test=audience_score-value] > .spinner-border").should(
+        "be.visible"
+      );
     });
   }
 });
@@ -103,16 +101,10 @@ describe("Scoreboard - Parcial data tests", () => {
     const currentTestData = testData[serie];
 
     it(`should display N/A for imdb score data and rottentomatoes data for serie: ${series[serie]}`, () => {
-      cy.log(currentTestData)
-      console.log(currentTestData);
       const currentTestDataNoIMDB = Object.assign({}, currentTestData);
       currentTestDataNoIMDB["imdb"] = "N/A";
-      console.log(currentTestDataNoIMDB)
 
-      cy.intercept(
-        `${Cypress.config("baseUrl")}api/*`,
-        currentTestDataNoIMDB
-      );
+      cy.intercept(`${Cypress.config("baseUrl")}api/*`, currentTestDataNoIMDB);
       cy.visit("/");
       cy.get("#id_search").type(currentTestData.title);
       cy.get("[data-test=search-button]").should("be.visible").click();
@@ -129,10 +121,7 @@ describe("Scoreboard - Parcial data tests", () => {
       currentTestDataNoRT["rt"]["tomatometer"] = "N/A";
       currentTestDataNoRT["rt"]["audience_score"] = "N/A";
 
-      cy.intercept(
-        `${Cypress.config("baseUrl")}api/*`,
-        currentTestDataNoRT
-      );
+      cy.intercept(`${Cypress.config("baseUrl")}api/*`, currentTestDataNoRT);
       cy.visit("/");
       cy.get("#id_search").type(currentTestData.title);
       cy.get("[data-test=search-button]").should("be.visible").click();
