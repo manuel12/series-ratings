@@ -5,6 +5,8 @@ from media_ratings.models import TV_Series, IMDbScores, RottentomatoesScores
 
 class TV_SeriesTests(TestCase):
     def setUp(self):
+        print("TV_SeriesTests")
+
         self.tv_series = TV_Series.objects.create(title="True Detective")
 
     def test_title_max_length(self):
@@ -56,6 +58,7 @@ class TV_SeriesTests(TestCase):
 
 class IMDbScoresTests(TestCase):
     def setUp(self):
+        print("IMDbScoresTests")
         self.tv_series = TV_Series.objects.create(title="True Detective")
         self.imdb_score = IMDbScores.objects.create(
             media=self.tv_series, imdb_score=8.6)
@@ -78,6 +81,7 @@ class IMDbScoresTests(TestCase):
 
 class RottentomatoesScoresTests(TestCase):
     def setUp(self):
+        print("RottentomatoesScoresTests")
         self.tv_series = TV_Series.objects.create(title="True Detective")
         self.rt_score = RottentomatoesScores.objects.create(
             media=self.tv_series, tomatometer_score=96, audience_score=94)
