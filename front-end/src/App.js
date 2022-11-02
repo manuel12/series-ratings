@@ -17,7 +17,7 @@ function App() {
   useEffect(() => {
     if (searchTermSubmitted) {
       const prodUrl = `https://media-ratings16.herokuapp.com/api/?media=${searchTerm}`;
-      const url = `http://localhost:8000/api/?media=${searchTerm}`;
+      const url = `/api/?media=${searchTerm}`;
 
       fetch(url, {
         method: "GET",
