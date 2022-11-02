@@ -1,3 +1,5 @@
+[![media-ratings](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/detailed/wy69vd&style=plastic&logo=cypress)](https://dashboard.cypress.io/projects/wy69vd/runs)
+
 # Series Ratings
 
 ## Usage
