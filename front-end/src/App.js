@@ -38,7 +38,7 @@ function App() {
   }, [searchTermSubmitted]);
 
   return (
-    <div className="container h-100" data-test="container">
+    <div className="app-container container h-100" data-test="container">
       <Header />
       <Content>
         {searchTermSubmitted ? (
