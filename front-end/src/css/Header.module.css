@@ -1,6 +1,8 @@
 .header {
-  margin: 0px auto 100px auto;
   padding-top: 150px;
+  padding-bottom: 100px;
+  margin: 0 auto;
+  width: 90%;
 }
 
 h1::before {
