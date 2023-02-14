@@ -1,15 +1,16 @@
 .scoreboard-container {
-  height: fit-content;
-  border-style: solid;
-  border-color: white;
-  border-width: 3px;
-  border-radius: 20px;
   background-color: darkgrey;
+  border: 3px solid white;
+  border-radius: 20px;
+  height: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 .scoreboard-header {
   text-align: center;
   margin: 15px 0;
+  padding: 10px;
 }
 
 h2 {
@@ -23,7 +24,8 @@ h2 {
 
 .scoreboard-content {
   display: flex;
-  margin: 25px 0;
+  margin: 0;
+  padding: 10px;
 }
 
 .score-block {
@@ -38,11 +40,11 @@ h2 {
   border-style: solid;
 }
 
-#imdb-block {
+.imdb-block {
   background-color: #f5c518;
 }
 
-#rottentomatoes-block {
+.rottentomatoes-block {
   background-color: #fa320a;
 }
 
@@ -72,7 +74,7 @@ h2 {
   border-radius: 15px;
 }
 
-#imdb-score {
+.imdb-score {
   font-size: 1.5rem;
   width: 40%;
   margin: 0 30%;
@@ -110,17 +112,17 @@ h2 {
     display: block;
   }
 
-  #imdb-score {
+  .imdb-score {
     width: 40%;
     margin: 0 30%;
   }
 
-  #tomatometer-value {
+  .tomatometer-value {
     width: 40%;
     margin: 0 30%;
   }
 
-  #audience_score-value {
+  .audience_score-value {
     width: 40%;
     margin: 0 30%;
   }
