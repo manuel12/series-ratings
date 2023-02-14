@@ -3,7 +3,6 @@ import Header from "./components/Header";
 import Content from "./components/Content";
 import Search from "./components/Search";
 import Scoreboard from "./components/Scoreboard";
-import Footer from "./components/Footer";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useEffect, useState } from "react";
@@ -54,7 +53,6 @@ function App() {
           />
         )}
       </Content>
-      <Footer />
     </div>
   );
 }
