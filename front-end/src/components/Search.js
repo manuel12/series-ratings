@@ -1,4 +1,5 @@
 import { useState } from "react";
+import classes from "../css/Search.module.css";
 
 const Search = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,36 +24,36 @@ const Search = (props) => {
   };
 
   return (
-    <div className="container" data-test="search-container">
-      <div className="row justify-content-center align-items-center h-100">
-        <div className="col-9">
-          <form
-            action="scoreboard/"
-            className="input-group"
-            method="POST"
-            data-test="search-form"
-            onSubmit={submitHandler}
+    <div className="container search-container" data-test="search-container">
+      <form
+        action="scoreboard/"
+        className="input-group"
+        method="POST"
+        data-test="search-form"
+        onSubmit={submitHandler}
+      >
+        <input
+          type="text"
+          name="search"
+          className="form-control"
+          placeholder="Stranger Things..."
+          maxLength="100"
+          required
+          id="id_search"
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+          }}
+        ></input>
+        <div className="input-group-append">
+          <button
+            type="submit"
+            className="btn btn-danger"
+            data-test="search-button"
           >
-            <input
-              type="text"
-              name="search"
-              className="form-control"
-              placeholder="Stranger Things..."
-              maxLength="100"
-              required
-              id="id_search"
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-              }}
-            ></input>
-            <div className="input-group-append input-group-lg">
-              <button type="submit" className="btn btn-danger" data-test="search-button">
-                Search
-              </button>
-            </div>
-          </form>
+            Search
+          </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };
