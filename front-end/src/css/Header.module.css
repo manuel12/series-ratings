@@ -1,8 +1,7 @@
-.header {
-  padding-top: 150px;
+.header-container {
+  width: 100% !important;
   padding-bottom: 100px;
   margin: 0 auto;
-  width: 90%;
 }
 
 h1::before {
