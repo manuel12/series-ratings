@@ -47,7 +47,7 @@ const Search = (props) => {
         <div className="input-group-append">
           <button
             type="submit"
-            className="btn btn-danger"
+            className={`btn btn-danger ${classes["search-button"]}`}
             data-test="search-button"
           >
             Search
