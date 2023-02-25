@@ -2,6 +2,14 @@
 
 # Series Ratings
 
+A Series Ratings application where you can search for the IMDb & Rotten Tomatoes ratings for your favorite series.
+
+<div float="left">
+  <img src="https://user-images.githubusercontent.com/4129325/221217865-d51a9f01-a1d1-438b-86b0-d85acd3d4351.png" title="Media Ratings Desktop" alt="Media Ratings Desktop" width="650" height="357" style="display: inline"/>
+  <img src="https://user-images.githubusercontent.com/4129325/221218084-5a6c65e6-b6de-41ef-96c4-41aa04b1cd82.png" title="Media Ratings Mobile" alt="Media Ratings Mobile" width="165" height="357"/>
+</div>
+
+
 ## Usage
 
 ### Requesting a Serie's scores
