@@ -4,10 +4,13 @@
 
 A Media Ratings application where you can search for the IMDb & Rotten Tomatoes ratings for your favorite series.
 
-<div float="left">
+
+  <h2>Desktop</h2>
   <img src="https://user-images.githubusercontent.com/4129325/221217865-d51a9f01-a1d1-438b-86b0-d85acd3d4351.png" title="Media Ratings Desktop" alt="Media Ratings Desktop" width="650" height="357" style="display: inline"/>
+  
+  <h2>Mobile</h2>
   <img src="https://github.com/manuel12/media-ratings/assets/4129325/7074b91e-8a14-47e6-9307-51330714b22b" title="Media Ratings Mobile" alt="Media Ratings Mobile" width="165" height="357"/>
-</div>
+
 
 
 
