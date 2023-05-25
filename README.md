@@ -1,8 +1,9 @@
 [![media-ratings](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/detailed/wy69vd&style=plastic&logo=cypress)](https://dashboard.cypress.io/projects/wy69vd/runs)
 
 # Series Ratings
+Media Ratings is an application where you can search for the IMDb & Rotten Tomatoes ratings of your favorite series.
 
-A Media Ratings application where you can search for the IMDb & Rotten Tomatoes ratings for your favorite series.
+The app visits the IMDb and Rotten Tomatoes websites and uses their own search features to find out the series you requested, then it parses the score on each page and delivers it to you on a results page. It also creates a record of the searched series on the database so the next time you search for it the result will be retrieved faster.
 
 
   <h2>Desktop</h2>
