@@ -141,14 +141,16 @@ class RottentomatoesSearchResultsParser(SearchResultsParser):
         try:
             page_sections = self.soup.find_all("search-page-result")
             for section in page_sections:
-                if 'type="tv"' in str(section):
+                if 'type="tvSeries">' in str(section):
                     return section
         except IndexError:
             return self.soup.find_all("search-page-result")[0]
 
     def get_search_results(self):
         """Returns an array of search result elements."""
+        print(f"-- Getting tv search results section for {self.search_query}")
         tv_search_results_section = self.get_tv_search_results_section()
+        print(f"-- Got {tv_search_results_section} tv search results section")
         search_results = tv_search_results_section.find_all(
             self.search_result_elem_cls)
         return search_results
