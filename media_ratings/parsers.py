@@ -63,7 +63,11 @@ class Parser:
             return self.html_page
 
         print(f"-- Opening: {self.url}...")
-        page = urllib.request.urlopen(self.url)
+        # It seems like the site does not like the user agent of Python 3.x so 403 error is shown.
+        # Specifying User-Agent solves the problem.
+        req = urllib.request.Request(
+            self.url, headers={'User-Agent': 'Mozilla/5.0'})
+        page = urllib.request.urlopen(req)
         return page.read()
 
     def get_elem_1(self):
