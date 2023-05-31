@@ -1,7 +1,8 @@
 {
-    "baseUrl": "http://localhost:8000/",
-    "integrationFolder": "cypress/integration/",
-    "defaultCommandTimeout": 10000,
-    "viewportWidth": 1100,
-    "viewportHeight": 660
+  "baseUrl": "http://localhost:8000/",
+  "integrationFolder": "cypress/integration/",
+  "defaultCommandTimeout": 10000,
+  "viewportWidth": 1100,
+  "viewportHeight": 660,
+  "projectId": "wy69vd"
 }
