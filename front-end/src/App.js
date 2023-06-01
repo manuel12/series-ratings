@@ -10,25 +10,30 @@ import { useEffect, useState } from "react";
 function App() {
   const [searchTermSubmitted, setSearchTermSubmitted] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [seriesTitle, setSeriesTitle] = useState(searchTerm);
   const [scoreData, setScoreData] = useState(null);
   const [showLoadingIcons, setShowLoadingIcons] = useState(true);
 
   useEffect(() => {
     if (searchTermSubmitted) {
       const url = `/api/?media=${searchTerm}`;
-
+      console.log(`Making request to url: ${url}...`);
       fetch(url, {
         method: "GET",
       })
         .then((fetchedData) => {
           return fetchedData.json();
         })
-        .then((data) => {
+        .then((dataObj) => {
+          console.log(dataObj);
           console.log(`Fetched from url: ${url}`);
-          console.table(data);
-          setScoreData(data);
+
+          const scoreData = dataObj.data;
+          const title = dataObj.title;
+
+          setSeriesTitle(title);
+          setScoreData(scoreData);
           setShowLoadingIcons(false);
-          return data;
         })
         .catch((error) => {
           console.error(error);
@@ -37,12 +42,12 @@ function App() {
   }, [searchTermSubmitted]);
 
   return (
-    <div className="app-container container h-100" data-test="container">
+    <div className='app-container container h-100' data-test='container'>
       <Header />
       <Content>
         {searchTermSubmitted ? (
           <Scoreboard
-            title={"The Sopranos"}
+            title={seriesTitle}
             data={scoreData}
             showLoadingIcons={showLoadingIcons}
           />
