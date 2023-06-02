@@ -26,7 +26,9 @@ class Media(models.Model):
         if not imdb_score_instance:
             imdb_score_instance = IMDbScores.objects.create(
                 media=self, imdb_score=None)
-        return imdb_score_instance.get_formatted_scores()
+        return {
+            "imdb_score": imdb_score_instance.imdb_score
+        }
 
     def rottentomatoes_scores(self):
         rt_score_instance = RottentomatoesScores.objects.filter(
@@ -35,7 +37,10 @@ class Media(models.Model):
         if not rt_score_instance:
             rt_score_instance = RottentomatoesScores.objects.create(
                 media=self, tomatometer_score=None, audience_score=None)
-        return rt_score_instance.get_formatted_scores()
+        return {
+            "tomatometer": rt_score_instance.tomatometer_score,
+            "audience_score": rt_score_instance.audience_score
+        }
 
 
 class TV_Series(Media):
@@ -72,11 +77,6 @@ class IMDbScores(MediaScore):
     def __str__(self):
         return f"IMDbScore of ({self.imdb_score}/10) for media {self.media}"
 
-    def get_formatted_scores(self):
-        return {
-            "imdb_score": f"{self.imdb_score}/10" if self.imdb_score else "N/A"
-        }
-
 
 class RottentomatoesScores(MediaScore):
     tomatometer_score = models.IntegerField(null=True)
@@ -87,9 +87,3 @@ class RottentomatoesScores(MediaScore):
 
     def __str__(self):
         return f"RottentomatoesScore of tomatometer ({self.tomatometer_score}%) and audience score ({self.audience_score}%) for media {self.media}"
-
-    def get_formatted_scores(self):
-        return {
-            "tomatometer": f"{self.tomatometer_score}%" if self.tomatometer_score else 'N/A',
-            "audience_score": f"{self.audience_score}%" if self.audience_score else 'N/A'
-        }
