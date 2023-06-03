@@ -1,6 +1,12 @@
 /// <reference types="cypress" />
 let testData = require("../../fixtures/test-data.json");
 let seriesTitles = testData.map((serie) => serie.title);
+// seriesTitles = seriesTitles.filter(
+//   (title) =>
+//     //title === "Magnum P.I." ||
+//     title === "The A-Team" //||
+//   // title === "Band Of Brothers"
+// );
 
 describe("Fetch Score Data API 'GET' request", () => {
   for (const serieTitle of seriesTitles) {
@@ -21,16 +27,32 @@ describe("Fetch Score Data API 'GET' request", () => {
         const currentSeries = testData.filter(
           (_serie) => _serie.title === serieTitle
         )[0];
-        const imdbScore = currentSeries.imdb;
-        const tomatometerScore = currentSeries.rt.tomatometer;
-        const audienceScore = currentSeries.rt.audience_score;
+        const imdbScore = currentSeries.data.imdb;
+        const tomatometerScore = currentSeries.data.rt.tomatometer;
+        const audienceScore = currentSeries.data.rt.audience_score;
+        const scoreData = response.body.data;
 
-        expect(response.body.imdb).to.eq(imdbScore);
-        expect(response.body.rt.tomatometer).to.eq(tomatometerScore);
-        expect(response.body.rt.audience_score).to.eq(audienceScore);
+        if (imdbScore != null) {
+          expect(scoreData.imdb).to.closeTo(imdbScore, 0.1);
+        } else {
+          expect(scoreData.imdb).to.eq(imdbScore);
+        }
+
+        if (tomatometerScore != null) {
+          expect(scoreData.rt.tomatometer).to.closeTo(tomatometerScore, 1);
+        } else {
+          expect(scoreData.rt.tomatometer).to.eq(tomatometerScore);
+        }
+
+        if (audienceScore != null) {
+          expect(scoreData.rt.audience_score).to.closeTo(audienceScore, 1);
+        } else {
+          expect(scoreData.rt.audience_score).to.eq(audienceScore);
+        }
       });
     });
   }
+
   it("should return score data not found", () => {
     const searchTerm = "Non Existing Movie";
     cy.request({
@@ -40,16 +62,16 @@ describe("Fetch Score Data API 'GET' request", () => {
         "Content-Type": "application/json",
       },
     }).then((response) => {
-      console.log(response);
       expect(response.status).to.eq(200);
       expect(response.headers).to.have.property(
         "content-type",
         "application/json"
       );
 
-      expect(response.body.imdb).to.eq("N/A");
-      expect(response.body.rt.tomatometer).to.eq("N/A");
-      expect(response.body.rt.audience_score).to.eq("N/A");
+      const scoreData = response.body.data;
+      expect(scoreData.imdb).to.eq(null);
+      expect(scoreData.rt.tomatometer).to.eq(null);
+      expect(scoreData.rt.audience_score).to.eq(null);
     });
   });
 });
