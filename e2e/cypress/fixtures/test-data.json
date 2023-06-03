@@ -1,27 +1,144 @@
 [
   {
-    "title": "Deadwood",
-    "rt": { "tomatometer": "92%", "audience_score": "96%" },
-    "imdb": "8.6/10"
+    "title": "Arcane",
+    "data": {
+      "rt": { "tomatometer": 100, "audience_score": 96 },
+      "imdb": 9.0
+    }
   },
   {
-    "title": "Rome",
-    "rt": { "tomatometer": "86%", "audience_score": "96%" },
-    "imdb": "8.7/10"
+    "title": "Band of Brothers",
+    "data": {
+      "rt": { "tomatometer": 97, "audience_score": 96 },
+      "imdb": 9.4
+    }
   },
   {
-    "title": "Band Of Brothers",
-    "rt": { "tomatometer": "97%", "audience_score": "97%" },
-    "imdb": "9.4/10"
+    "title": "Barry",
+    "data": {
+      "rt": { "tomatometer": 98, "audience_score": 89 },
+      "imdb": 8.4
+    }
+  },
+  {
+    "title": "Better Call Saul",
+    "data": {
+      "rt": { "tomatometer": 98, "audience_score": 96 },
+      "imdb": 9.0
+    }
+  },
+  {
+    "title": "Breaking Bad",
+    "data": {
+      "rt": { "tomatometer": 96, "audience_score": 97 },
+      "imdb": 9.5
+    }
+  },
+
+  {
+    "title": "Chernobyl",
+    "data": {
+      "rt": { "tomatometer": 95, "audience_score": 97 },
+      "imdb": 9.4
+    }
+  },
+  {
+    "title": "Euphoria",
+    "data": {
+      "rt": { "tomatometer": 88, "audience_score": 84 },
+      "imdb": 8.3
+    }
+  },
+  {
+    "title": "Game of Thrones",
+    "data": {
+      "rt": { "tomatometer": 88, "audience_score": 84 },
+      "imdb": 9.2
+    }
+  },
+  {
+    "title": "Mad Men",
+    "data": {
+      "rt": { "tomatometer": 94, "audience_score": 97 },
+      "imdb": 8.7
+    }
+  },
+  {
+    "title": "Preacher",
+    "data": {
+      "rt": { "tomatometer": 87, "audience_score": 74 },
+      "imdb": 7.9
+    }
   },
   {
     "title": "Six Feet Under",
-    "rt": { "tomatometer": "81%", "audience_score": "96%" },
-    "imdb": "8.7/10"
+    "data": {
+      "rt": { "tomatometer": 81, "audience_score": 96 },
+      "imdb": 8.7
+    }
+  },
+  {
+    "title": "Stranger Things",
+    "data": {
+      "rt": { "tomatometer": 92, "audience_score": 90 },
+      "imdb": 8.7
+    }
+  },
+
+  {
+    "title": "Succession",
+    "data": {
+      "rt": { "tomatometer": 95, "audience_score": 89 },
+      "imdb": 8.9
+    }
+  },
+  {
+    "title": "The Crown",
+    "data": {
+      "rt": { "tomatometer": 86, "audience_score": 90 },
+      "imdb": 8.6
+    }
+  },
+  {
+    "title": "The Last Of Us",
+    "data": {
+      "rt": { "tomatometer": "", "audience_score": "" },
+      "imdb": ""
+    }
   },
   {
     "title": "The Sopranos",
-    "rt": { "tomatometer": "92%", "audience_score": "96%" },
-    "imdb": "9.2/10"
+    "data": {
+      "rt": { "tomatometer": 92, "audience_score": 96 },
+      "imdb": 9.2
+    }
+  },
+  {
+    "title": "The Walking Dead",
+    "data": {
+      "rt": { "tomatometer": 79, "audience_score": 77 },
+      "imdb": 8.1
+    }
+  },
+  {
+    "title": "The Wire",
+    "data": {
+      "rt": { "tomatometer": 94, "audience_score": 96 },
+      "imdb": 9.3
+    }
+  },
+  {
+    "title": "The Witcher",
+    "data": {
+      "rt": { "tomatometer": 81, "audience_score": 74 },
+      "imdb": 8.1
+    }
+  },
+  {
+    "title": "Wednesday",
+    "data": {
+      "rt": { "tomatometer": 71, "audience_score": 85 },
+      "imdb": 8.1
+    }
   }
 ]
