@@ -41,22 +41,50 @@ def get_rt_scores(search_query):
     tv_section = tv_section[0]
 
     # Get the search results on the tv section
-    tv_section_results = tv_section.select("search-page-media-row")
+    tv_section_results_elems = tv_section.select("search-page-media-row")
 
-    # Get first result
-    first_result = tv_section_results[0]
+    # Get first result element
+    #first_result_elem = tv_section_results_elems[0]
+    # =============================================================
 
-    # Get first result url
-    result_urls = first_result.select('a[href]')
-    result_url = result_urls[0]
+    # 1) Get the first 4 search result elements...
+    # 2) Iterate through each...
+    # 3) Check their score-icon-critic elem...
+    # 4) Get their tomatometerscore number...
+    # 5) Get their tomatometerstate number...
+    # 6) If both are present add them to the correct_results array.
 
-    # Get the url for the first url
-    first_result_url = result_url.get('href')
-    print(f"-- {first_result_url}")
+    correct_results = []
+    for result_elem in tv_section_results_elems:
+        tomatometerscore = result_elem.get('tomatometerscore')
+        tomatometerstate = result_elem.get('tomatometerstate')
+        print(tomatometerscore, tomatometerstate)
+        if tomatometerscore and tomatometerstate:
+            correct_results.append(result_elem)
+
+    print(f"-- correct_results: {correct_results}")
+
+    # 1) Iterate throught the correct_results array...
+    # 2) Get the max tomatometer score from the array...
+    # 3) correct_result_elem is the result with the max tomatometer score...
+
+    max_tomatometer_score = max([int(result.get(
+        'tomatometerscore')) for result in correct_results])
+
+    print(f"-- max_tomatometer_score: {max_tomatometer_score}")
+    for result in correct_results:
+        if max_tomatometer_score == int(result.get('tomatometerscore')):
+            correct_result_elem = result
+
+    # =============================================================
+
+    # Get the url for the correct search result
+    correct_result_url = correct_result_elem.find('a').get('href')
+    print(f"-- {correct_result_url}")
 
     # Use first_result_url to get a new soup
     new_soup = BeautifulSoup(get_page_source(
-        first_result_url), 'html.parser')
+        correct_result_url), 'html.parser')
     series_score_board = new_soup.select("score-board")[0]
 
     # Get tomatometer and audience score
