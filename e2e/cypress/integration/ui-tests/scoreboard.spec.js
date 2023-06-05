@@ -2,6 +2,7 @@
 
 let testData = require("../../fixtures/test-data.json");
 let series = testData;
+console.log(series);
 
 const testAllScoreValues = (imdbScore, tomatometerScore, audienceScore) => {
   cy.get("[data-test=imdb-header]")
@@ -15,6 +16,7 @@ const testAllScoreValues = (imdbScore, tomatometerScore, audienceScore) => {
   } else {
     cy.get("[data-test=imdb-score-value]")
       .should("be.visible")
+      .and("contain.text", "/10")
       .then((elem) => {
         const elemText = elem.text();
         const elemImdbScore = Number(elemText.replace("/10", ""));
@@ -37,6 +39,7 @@ const testAllScoreValues = (imdbScore, tomatometerScore, audienceScore) => {
   } else {
     cy.get("[data-test=tomatometer-value]")
       .should("be.visible")
+      .and("contain.text", "%")
       .then((elem) => {
         const elemText = elem.text();
         const elemTomatometerScore = Number(elemText.replace("%", ""));
@@ -55,6 +58,7 @@ const testAllScoreValues = (imdbScore, tomatometerScore, audienceScore) => {
   } else {
     cy.get("[data-test=audience_score-value]")
       .should("be.visible")
+      .and("contain.text", "%")
       .then((elem) => {
         const elemAudienceScore = Number(elem.text().replace("%", ""));
         expect(audienceScore).to.be.closeTo(elemAudienceScore, 1);
@@ -64,7 +68,7 @@ const testAllScoreValues = (imdbScore, tomatometerScore, audienceScore) => {
 
 describe("Scoreboard - Search results tests", () => {
   for (const serie in series) {
-    const currentTestData = testData[serie];
+    const currentTestData = series[serie];
 
     it.only(`should display current serie Title, IMDb and Rottentoes data for serie: ${currentTestData.title}`, () => {
       cy.visit("/");
