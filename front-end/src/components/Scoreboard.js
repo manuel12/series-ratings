@@ -16,9 +16,7 @@ const Scoreboard = (props) => {
             <div
               className={`spinner-border ${classes["media-title-spinner"]}`}
               role='status'
-            >
-              <span className='visually-hidden'>Loading...</span>
-            </div>
+            ></div>
           ) : (
             props.title
           )}
@@ -50,9 +48,7 @@ const Scoreboard = (props) => {
                 data-test='imdb-score-value'
               >
                 {props.showLoadingIcons ? (
-                  <div className='spinner-border' role='status'>
-                    <span className='visually-hidden'>Loading...</span>
-                  </div>
+                  <div className='spinner-border' role='status'></div>
                 ) : props.data && props.data.imdb ? (
                   `${props.data["imdb"]}/10`
                 ) : (
@@ -89,9 +85,7 @@ const Scoreboard = (props) => {
                 data-test='tomatometer-value'
               >
                 {props.showLoadingIcons ? (
-                  <div className='spinner-border' role='status'>
-                    <span className='visually-hidden'>Loading...</span>
-                  </div>
+                  <div className='spinner-border' role='status'></div>
                 ) : props.data &&
                   props.data["rt"] &&
                   props.data["rt"]["tomatometer"] ? (
@@ -115,7 +109,7 @@ const Scoreboard = (props) => {
               >
                 {props.showLoadingIcons ? (
                   <div className='spinner-border' role='status'>
-                    <span className='visually-hidden'>Loading...</span>
+                    +
                   </div>
                 ) : props.data &&
                   props.data["rt"] &&
