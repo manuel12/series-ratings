@@ -2,6 +2,8 @@
   "baseUrl": "http://localhost:8000/",
   "integrationFolder": "cypress/integration/",
   "defaultCommandTimeout": 10000,
+  "screenshotOnRunFailure": false,
+  "video": false,
   "viewportWidth": 1100,
   "viewportHeight": 660,
   "projectId": "wy69vd"
