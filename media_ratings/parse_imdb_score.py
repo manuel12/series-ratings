@@ -8,17 +8,17 @@ def get_imdb_score(search_query):
     search_url_prefix = "https://www.imdb.com/search/title/?title="
     search_url_suffix = "&languages=en"
 
-    search_result_elem_class = "mode-advanced"
-
     imdb_search_results_url = add_pluses_to_url(
         search_url_prefix + search_query + search_url_suffix)
 
     # Use imdb search results page url to get the soup representation of imdb search results page
-    print(f"-- Getting soup from search url [ {imdb_search_results_url} ]...")
+    print(
+        f"-- Getting soup from search results page url [ {imdb_search_results_url} ]...")
     search_results_page_soup = BeautifulSoup(get_page_source(
         imdb_search_results_url), 'html.parser')
 
     # Get first 3 search results elements
+    search_result_elem_class = "mode-advanced"
     search_result_elems = search_results_page_soup.find_all(
         class_=search_result_elem_class, limit=3)
 
