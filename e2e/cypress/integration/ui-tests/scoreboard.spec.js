@@ -2,7 +2,6 @@
 
 let testData = require("../../fixtures/test-data.json");
 let series = testData;
-console.log(series);
 
 const testAllScoreValues = (imdbScore, tomatometerScore, audienceScore) => {
   cy.get("[data-test=imdb-header]")
@@ -20,7 +19,7 @@ const testAllScoreValues = (imdbScore, tomatometerScore, audienceScore) => {
       .then((elem) => {
         const elemText = elem.text();
         const elemImdbScore = Number(elemText.replace("/10", ""));
-        expect(imdbScore).to.be.closeTo(elemImdbScore, 1);
+        expect(imdbScore).to.be.closeTo(elemImdbScore, 0.2);
       });
   }
 
@@ -70,7 +69,7 @@ describe("Scoreboard - Search results tests", () => {
   for (const serie in series) {
     const currentTestData = series[serie];
 
-    it.only(`should display current serie Title, IMDb and Rottentoes data for serie: ${currentTestData.title}`, () => {
+    it(`should display current serie Title, IMDb and Rottentoes data for serie: ${currentTestData.title}`, () => {
       cy.visit("/");
       cy.get("#id_search").type(currentTestData.title);
       cy.get("[data-test=search-button]").should("be.visible").click();
