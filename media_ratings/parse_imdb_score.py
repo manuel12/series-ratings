@@ -1,34 +1,5 @@
 from bs4 import BeautifulSoup
-import urllib.request
-
-# -Write a story about a developer who pitches a lead developer position
-#   leads his team to great successes and by night enjoys the polish
-#   nightlife and hooking up  with girls.
-
-
-def clean_up_url(url):
-    """
-        Returns a clean url string.
-        Url before cleaning: https://www.imdb.com/title/love death and-robots/
-        Url after cleaning: https://www.imdb.com/title/love+death+and+robots/
-        """
-    print(f"-- Cleaning url: [ {url} ]...")
-    cleaned_url = url.strip().replace(" ", "+").replace("-", "+")
-    print(f"-- Cleaned url: [ {cleaned_url} ]...")
-    return cleaned_url
-
-
-def get_page_source(url):
-    print(f"-- Opening: [ {url} ]...")
-    # It seems like IMDb does not like the user agent of Python 3.x so 403 error is shown.
-    # Specifying User-Agent solves the problem.
-    req = urllib.request.Request(
-        url, headers={
-            'Accept-Language': 'en-US,en;q=0.5',
-            'User-Agent': 'Mozilla/5.0'
-        })
-    page = urllib.request.urlopen(req)
-    return page.read()
+from utils import add_pluses_to_url, get_page_source
 
 
 def get_imdb_score(search_query):
@@ -38,7 +9,7 @@ def get_imdb_score(search_query):
     search_url_suffix = "&languages=en"
 
     search_url = search_url_prefix + search_query + search_url_suffix
-    search_url = clean_up_url(search_url)
+    search_url = add_pluses_to_url(search_url)
 
     # Use search url to get the soup of imdb search results page
     print(f"-- Getting soup from search url [ {search_url} ]...")
