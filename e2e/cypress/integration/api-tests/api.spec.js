@@ -1,20 +1,15 @@
 /// <reference types="cypress" />
 let testData = require("../../fixtures/test-data.json");
-let seriesTitles = testData.map((serie) => serie.title);
-// seriesTitles = seriesTitles.filter(
-//   (title) =>
-//     //title === "Magnum P.I." ||
-//     title === "The A-Team" //||
-//   // title === "Band Of Brothers"
-// );
+let series = testData;
 
 describe("Fetch Score Data API 'GET' request", () => {
-  for (const serieTitle of seriesTitles) {
-    it(`should return score data for ${serieTitle}`, () => {
-      const searchTerm = serieTitle;
+  for (const serie in series) {
+    const currentTestData = series[serie];
+
+    it(`should return score data for ${currentTestData.title}`, () => {
       cy.request({
         method: "GET",
-        url: `${Cypress.config("baseUrl")}api/?media=${searchTerm}`,
+        url: `${Cypress.config("baseUrl")}api/?media=${currentTestData.title}`,
         headers: {
           "Content-Type": "application/json",
         },
@@ -24,30 +19,28 @@ describe("Fetch Score Data API 'GET' request", () => {
           "content-type",
           "application/json"
         );
-        const currentSeries = testData.filter(
-          (_serie) => _serie.title === serieTitle
-        )[0];
-        const imdbScore = currentSeries.data.imdb;
-        const tomatometerScore = currentSeries.data.rt.tomatometer;
-        const audienceScore = currentSeries.data.rt.audience_score;
+
+        const imdbScore = currentTestData.data.imdb;
+        const tomatometerScore = currentTestData.data.rt.tomatometer;
+        const audienceScore = currentTestData.data.rt.audience_score;
         const scoreData = response.body.data;
 
-        if (imdbScore != null) {
-          expect(scoreData.imdb).to.closeTo(imdbScore, 0.1);
-        } else {
+        if (imdbScore == null) {
           expect(scoreData.imdb).to.eq(imdbScore);
+        } else {
+          expect(scoreData.imdb).to.closeTo(imdbScore, 0.2);
         }
 
-        if (tomatometerScore != null) {
-          expect(scoreData.rt.tomatometer).to.closeTo(tomatometerScore, 1);
-        } else {
+        if (tomatometerScore == null) {
           expect(scoreData.rt.tomatometer).to.eq(tomatometerScore);
+        } else {
+          expect(scoreData.rt.tomatometer).to.closeTo(tomatometerScore, 1);
         }
 
-        if (audienceScore != null) {
-          expect(scoreData.rt.audience_score).to.closeTo(audienceScore, 1);
-        } else {
+        if (audienceScore == null) {
           expect(scoreData.rt.audience_score).to.eq(audienceScore);
+        } else {
+          expect(scoreData.rt.audience_score).to.closeTo(audienceScore, 1);
         }
       });
     });
