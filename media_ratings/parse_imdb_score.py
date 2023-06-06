@@ -4,26 +4,30 @@ from utils import add_pluses_to_url, get_page_source
 
 def get_imdb_score(search_query):
     print(f"--- [ GETTING IMDB SCORE ] ---")
-    # Form imdb search results page url by adding the search query equal to the title param
+    # Forms an imdb search results page url by appending imdb url prefix, search query and suffix
     search_url_prefix = "https://www.imdb.com/search/title/?title="
     search_url_suffix = "&languages=en"
 
-    search_url = search_url_prefix + search_query + search_url_suffix
-    search_url = add_pluses_to_url(search_url)
+    search_result_elem_class = "mode-advanced"
 
-    # Use search url to get the soup of imdb search results page
-    print(f"-- Getting soup from search url [ {search_url} ]...")
-    soup = BeautifulSoup(get_page_source(search_url), 'html.parser')
+    imdb_search_results_url = add_pluses_to_url(
+        search_url_prefix + search_query + search_url_suffix)
 
-    # Get first 3 search results.
-    search_result_elems = soup.find_all(
-        class_="mode-advanced", limit=3)
+    # Use imdb search results page url to get the soup representation of imdb search results page
+    print(f"-- Getting soup from search url [ {imdb_search_results_url} ]...")
+    search_results_page_soup = BeautifulSoup(get_page_source(
+        imdb_search_results_url), 'html.parser')
 
-    # Get first 3 search results that are tv series
-    #   Define a tv series as:
-    #   1) A result element ."mode-advanced" that has a .certificate with text 'TV-'
-    #   2) A result element ."mode-advanced" that has NO "Gross:" text
-    #   3) A result element ."mode-advanced" that has NO "Documentary" text
+    # Get first 3 search results elements
+    search_result_elems = search_results_page_soup.find_all(
+        class_=search_result_elem_class, limit=3)
+
+    # Of these 3 search result elements add the ones that are tv series to the search results tv series array
+
+    # A tv series is defined as:
+    #   1) A result element that has a class '.certificate' that contains the text 'TV-', as in  'TV-MA', for example
+    #   2) A result element that has NO 'Gross:' text, as in 'Gross: $253.00M' (reserved for movies)
+    #   3) A result element that has a class '.genre' and contains NO "Documentary" text (reserved for movies)
 
     search_result_tv_series = []
     for elem in search_result_elems:
@@ -39,16 +43,17 @@ def get_imdb_score(search_query):
             search_result_tv_series.append(elem)
 
     # Of the tv series search results return the one with the highest score
-    # EXPLANATION:
-    #   Generally if there's more than 1 match(if there exists the original series)
-    #   plus remakes, or in general if is more than 1 result in IMDb's tv section
+
+    # EXPLANATION: Generally if there's more than 1 match (if there exists the original series
+    #   plus remakes), or in general if is more than 1 result in IMDb's tv section
     #   generally the results with the highest score is the original series
     #   (not an exact science...)
 
-    # If there is only 1 search_result_tv_series, make that one the correct_search_result_elem
+    # If there is only 1 search_result_tv_series, make that one the correct search result element
     if len(search_result_tv_series) == 0:
         correct_search_result_elem = search_result_tv_series[0]
-    # Else pick the search_result_tv_series with the highest score
+
+    # Else pick the search result tv series  with the highest score
     else:
         search_result_tv_series_scores = [
             float(series.find("strong").text) for series in search_result_tv_series]
@@ -58,7 +63,7 @@ def get_imdb_score(search_query):
         max_score_tv_series = search_result_tv_series[max_tv_series_score_index]
         correct_search_result_elem = max_score_tv_series
 
-    # Return correct_search_result_elem score element text
+    # Return correct search result element score element text
     imdb_score_text = correct_search_result_elem.find("strong").text
 
     # Make score text into a float
@@ -68,6 +73,3 @@ def get_imdb_score(search_query):
         f"-- imdb_score for '{search_query}': {imdb_score}")
 
     return imdb_score
-
-
-# get_imdb_score("The a team")
