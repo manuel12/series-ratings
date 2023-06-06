@@ -1,47 +1,30 @@
 from bs4 import BeautifulSoup
-import urllib.request
-
-
-def clean_up_url(url):
-    """
-        Returns a clean url string.
-        Url before cleaning: https://www.imdb.com/title/love death and-robots/
-        Url after cleaning: https://www.imdb.com/title/love+death+and+robots/
-        """
-    print(f"-- Cleaning url: [ {url} ]...")
-    cleaned_url = url.strip().replace(" ", "+").replace("-", "+")
-    print(f"-- Cleaned url: [ {cleaned_url} ]...")
-    return cleaned_url
-
-
-def get_page_source(url):
-    print(f"-- Opening: [ {url} ]...")
-    # It seems like IMDb does not like the user agent of Python 3.x so 403 error is shown.
-    # Specifying User-Agent solves the problem.
-    req = urllib.request.Request(
-        url, headers={'User-Agent': 'Mozilla/5.0'})
-    page = urllib.request.urlopen(req)
-    return page.read()
+from utils import add_pluses_to_url, get_page_source
 
 
 def get_rt_scores(search_query):
     print(f"--- [ GETTING ROTTEN TOMATOES SCORES ] ---")
     # Form rt search results page url
     search_url_prefix = "https://www.rottentomatoes.com/search?search="
+    rt_search_results_url = add_pluses_to_url(search_url_prefix + search_query)
 
-    search_url = search_url_prefix + search_query
-    search_url = clean_up_url(search_url)
+    # Use rt search results page url to get the soup representation of rt search results page
+    print(
+        f"-- Getting soup from search results page url [ {rt_search_results_url} ]...")
+    search_results_page_soup = BeautifulSoup(
+        get_page_source(rt_search_results_url), 'html.parser')
 
-    # Use search url to get the soup of rt search results page
-    print(f"-- Getting soup from search url [ {search_url} ]...")
-    soup = BeautifulSoup(get_page_source(search_url), 'html.parser')
+    # Get tv section if it's present, if it's not return false
+    search_results_tv_section = search_results_page_soup.select(
+        "[type=tvSeries]")
 
-    # Get tv section if it's present, if it's not return falses
-    tv_section = soup.select("[type=tvSeries]")
-    tv_section = tv_section[0]
+    # Since soup.select returns an array get the first item of such array
+    # which is also the search results tv section
+    search_results_tv_section = search_results_tv_section[0]
 
-    # Get the search results on the tv section
-    tv_section_results_elems = tv_section.select("search-page-media-row")
+    # Get the search results elements on the tv section
+    tv_section_results_elems = search_results_tv_section.select(
+        "search-page-media-row")
 
     # Get first result element
     #first_result_elem = tv_section_results_elems[0]
