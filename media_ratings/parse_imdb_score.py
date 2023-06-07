@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from utils import add_pluses_to_url, get_page_source
+from .utils import add_pluses_to_url, get_page_source
 
 
 def get_imdb_score(search_query):
