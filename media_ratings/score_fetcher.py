@@ -35,8 +35,8 @@ def get_score_data(search_term):
     tv_series = TV_Series.objects.filter(title=search_term).first()
     print(f"-- tv_series: {tv_series}")
 
-    # If tv series exists already then get it's scores
-    # and add then to score_data dict
+    # If tv series model exists already then get it's scores
+    # and add them to score_data dict
     if(tv_series):
         print(f"-- Found series: {tv_series}")
 
