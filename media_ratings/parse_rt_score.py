@@ -23,43 +23,34 @@ def get_rt_scores(search_query):
     search_results_tv_section = search_results_tv_section[0]
 
     # Get the search results elements on the tv section
+    search_result_elem_class = "search-page-media-row"
     tv_section_results_elems = search_results_tv_section.select(
-        "search-page-media-row")
-
-    # Get first result element
-    #first_result_elem = tv_section_results_elems[0]
-    # =============================================================
-
-    # 1) Get the first 4 search result elements...
-    # 2) Iterate through each...
-    # 3) Check their score-icon-critic elem...
-    # 4) Get their tomatometerscore number...
-    # 5) Get their tomatometerstate number...
-    # 6) If both are present add them to the correct_results array.
+        search_result_elem_class)
 
     correct_results = []
+
+    # Iterate through each tv section result elements
     for result_elem in tv_section_results_elems:
+
+        # Get their tomatometerscore number and tomatometerstate number
         tomatometerscore = result_elem.get('tomatometerscore')
         tomatometerstate = result_elem.get('tomatometerstate')
-        print(tomatometerscore, tomatometerstate)
+
+        # If both are present add them to the correct results array
         if tomatometerscore and tomatometerstate:
             correct_results.append(result_elem)
 
     print(f"-- correct_results: {correct_results}")
 
-    # 1) Iterate throught the correct_results array...
-    # 2) Get the max tomatometer score from the array...
-    # 3) correct_result_elem is the result with the max tomatometer score...
-
+    # Get the max tomatometer score value from the correct results array
     max_tomatometer_score = max([int(result.get(
         'tomatometerscore')) for result in correct_results])
-
     print(f"-- max_tomatometer_score: {max_tomatometer_score}")
+
     for result in correct_results:
+        # The correct result element is the result with the max tomatometer score
         if max_tomatometer_score == int(result.get('tomatometerscore')):
             correct_result_elem = result
-
-    # =============================================================
 
     # Get the url for the correct search result
     correct_result_url = correct_result_elem.find('a').get('href')
