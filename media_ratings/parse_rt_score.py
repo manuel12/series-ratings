@@ -49,6 +49,7 @@ def get_rt_scores(search_query):
 
     for result in correct_results:
         # The correct result element is the result with the max tomatometer score
+        # (not an exact science...)
         if max_tomatometer_score == int(result.get('tomatometerscore')):
             correct_result_elem = result
 
@@ -56,22 +57,20 @@ def get_rt_scores(search_query):
     correct_result_url = correct_result_elem.find('a').get('href')
     print(f"-- {correct_result_url}")
 
-    # Use first_result_url to get a new soup
-    new_soup = BeautifulSoup(get_page_source(
+    # Use correct result url to get a new soup from the search result rt series page
+    rt_series_page = BeautifulSoup(get_page_source(
         correct_result_url), 'html.parser')
-    series_score_board = new_soup.select("score-board")[0]
+    series_score_board = rt_series_page.select("score-board")[0]
 
-    # Get tomatometer and audience score
+    # Get the tomatometer and audience score values from the attributes of the same name
+    # on the score board element:
+    #   <score-board tomatometerscore=100  audiencescore=97 />
     score_board_tomatometer_value = series_score_board.get(
         'tomatometerscore')
     score_board_audience_score_value = series_score_board.get(
         'audiencescore')
 
-    # Get the tomatometer and audience score values from the attributes of the same name
-    # on the score board element:
-    #   <score-board tomatometerscore=100  audiencescore=97 />
-
-    # In case any of them is not present, or '' None will be set instead.
+    # In case any of them is not present(or ''), None will be set instead.
     tomatometer_score = int(
         score_board_tomatometer_value) if score_board_tomatometer_value else None
     audience_score = int(
