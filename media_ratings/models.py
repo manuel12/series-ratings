@@ -26,9 +26,8 @@ class Media(models.Model):
         if not imdb_score_instance:
             imdb_score_instance = IMDbScores.objects.create(
                 media=self, imdb_score=None)
-        return {
-            "imdb_score": imdb_score_instance.imdb_score
-        }
+
+        return imdb_score_instance.imdb_score
 
     def rottentomatoes_scores(self):
         rt_score_instance = RottentomatoesScores.objects.filter(
@@ -37,10 +36,8 @@ class Media(models.Model):
         if not rt_score_instance:
             rt_score_instance = RottentomatoesScores.objects.create(
                 media=self, tomatometer_score=None, audience_score=None)
-        return {
-            "tomatometer": rt_score_instance.tomatometer_score,
-            "audience_score": rt_score_instance.audience_score
-        }
+
+        return rt_score_instance.tomatometer_score, rt_score_instance.audience_score
 
 
 class TV_Series(Media):
