@@ -5,6 +5,13 @@ from .parse_rt_score import get_rt_scores
 
 
 def get_score_data(search_term):
+    """
+    Retrieves the IMDb and Rotten Tomatoes score data about a series from the web
+    using the search_term.
+
+    If both IMDb and Rotten Tomatoes data are already present in database,
+    then it returns that data. 
+    """
     imdb_score = "N/A"
     rt_tomatometer_score = "N/A"
     rt_audience_score = "N/A"
@@ -19,14 +26,18 @@ def get_score_data(search_term):
 
     complete_data_available = False
 
+    # Capitalizes words in search term and also
+    # converts '&'s to 'and's and hyphens to spaces
     search_term = standardize_phrase(search_term)
     print(f"-- Searching for term: {search_term}")
 
+    # Get tv series model from database
     tv_series = TV_Series.objects.filter(title=search_term).first()
     print(f"-- tv_series: {tv_series}")
 
+    # If tv series exists already then get it's scores
+    # and add then to score_data dict
     if(tv_series):
-        # Get imdb and rt score data from existing tv series model
         print(f"-- Found series: {tv_series}")
 
         imdb_score = tv_series.imdb_scores()["imdb_score"]
@@ -38,17 +49,18 @@ def get_score_data(search_term):
         score_data["imdb"] = imdb_score
         score_data["rt"]["tomatometer"] = rt_tomatometer_score
         score_data["rt"]["audience_score"] = rt_audience_score
+
+    # If it doesn't exists simply create the model in the database for use later
     else:
         tv_series = TV_Series.objects.create(title=search_term)
         tv_series.save()
 
-    print(f"-- Getting score data")
-    print(f"-- Title: {tv_series.title}")
-
     if complete_data_available:
+        print(f"-- Data for {tv_series.title} found in database")
         print(f"-- Returning score data")
         return score_data
     else:
+        print(f"-- Fetching score data from the web")
         # Fetch each piece of the missing score data.
         if "N/A" == imdb_score:
             print(f"-- Fetching score data for imdb")
