@@ -40,11 +40,8 @@ def get_score_data(search_term):
     if(tv_series):
         print(f"-- Found series: {tv_series}")
 
-        imdb_score = tv_series.imdb_scores()["imdb_score"]
-        rt_tomatometer_score = tv_series.rottentomatoes_scores()[
-            "tomatometer"]
-        rt_audience_score = tv_series.rottentomatoes_scores()[
-            "audience_score"]
+        imdb_score = tv_series.imdb_scores()
+        rt_tomatometer_score, rt_audience_score = tv_series.rottentomatoes_scores()
 
         score_data["imdb"] = imdb_score
         score_data["rt"]["tomatometer"] = rt_tomatometer_score
