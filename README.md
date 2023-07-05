@@ -4,7 +4,7 @@
 
 # Series Ratings
 
-Media Ratings is an application where you can search for the IMDb & Rotten Tomatoes ratings of your favorite series.
+Series Ratings is an application where you can search for the IMDb & Rotten Tomatoes ratings of your favorite series.
 
 The app visits the IMDb and Rotten Tomatoes websites and uses their own search features to find out the series you requested, then it parses the score on each page and delivers it to you on a results page. It also creates a record of the searched series on the database so the next time you search for it the result will be retrieved faster.
 
