@@ -2,7 +2,7 @@
 
 \*_Check note under 'E2E tests' section_
 
-# Series Ratings
+![Series Ratings](hero.png)
 
 Series Ratings is an application where you can search for the IMDb & Rotten Tomatoes ratings of your favorite series.
 
